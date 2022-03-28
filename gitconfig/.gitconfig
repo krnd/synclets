@@ -1,0 +1,79 @@
+[user]
+    name = {{user.name}}
+    email = {{user.email}}
+
+[url "~/Projects/"]
+	insteadOf = prj:
+{{#urls}}
+[url "{{path}}"]
+    insteadOf = {{name}}:
+{{/urls}}
+
+[alias]
+    # archive
+    zip = "!f() { archive_name=$(basename $(git rev-parse --show-toplevel)).zip; git archive --format=zip --output=$archive_name HEAD; }; f"
+    # branch
+    br = branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate
+    brdel = branch -D
+    # checkout
+    co = checkout
+    # cherry-pick
+    pick = cherry-pick
+    # commit
+    c = commmit
+    cm = commit -m
+    caa = commit --all --amend --no-edit
+    # diff
+    dfc = diff --cached
+    # log
+    lg = log --format=compactlog --max-count=5
+    last = log -1 HEAD --stat
+    # pull
+    pl = pull
+    # push
+    p = push
+    done = push origin HEAD
+    # reset
+    undo = reset --mixed HEAD~1
+    discard = !git reset --hard && git clean -d --force
+    # status
+    s = status --short --branch
+    # submodule
+    clone-sm = clone --recurse-submodules
+    sm-pull = submodule foreach 'git pull origin master'
+    sm-status = submodule foreach 'git status'
+    sms = sm-status
+    sm-update = submodule update --recursive --remote
+    smu = sm-update
+
+[core]
+    autocrlf = true
+
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    process = git-lfs filter-process
+    required = true
+    smudge = git-lfs smudge -- %f
+
+[log]
+    abbrevCommit = true
+    decorate = short
+
+[merge]
+    conflictStyle = diff3
+
+[pretty]
+    compactlog = %C(yellow)%h%C(reset) %C(dim cyan)%ar%C(reset) %C(green)%an%C(reset) %C(white)%s%C(reset)%C(bold red)%d%C(reset)
+
+[push]
+    default = simple
+    followTags = true
+
+[status]
+    aheadBehind = true
+    branch = true
+    relativePaths = true
+    renames = copy
+    short = true
+    showStash = true
+    showUntrackedFiles = all
