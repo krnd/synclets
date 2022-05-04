@@ -1,11 +1,10 @@
 ################################## Modules #####################################
 
 ################### Oh My Posh #############################
-#Requires -Modules oh-my-posh
 #   https://ohmyposh.dev/docs
 
 # Apply custom prompt theme.
-Set-PoshPrompt -Theme (Resolve-Path -Path (Join-Path $env:USERPROFILE (Join-Path ".config" "oh-my-posh.json"))).ProviderPath
+oh-my-posh init pwsh --config (Resolve-Path -Path (Join-Path $env:USERPROFILE (Join-Path ".config" "oh-my-posh.json"))).ProviderPath | Invoke-Expression
 
 # Enable transient prompt feature.
 Enable-PoshTransientPrompt
