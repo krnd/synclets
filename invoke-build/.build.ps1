@@ -5,42 +5,60 @@
 
 $InvokeBuildConfig = $null
 foreach ($FileName in @(
-        "invoke.json",
-        "build.json",
-        "invoke-build.json"
+    "invoke.json",
+    "build.json",
+    "invoke-build.json"
 )) {
     foreach ($SearchPath in @(
-            ".",
-            ".config",
-            ".vscode"
+        ".",
+        ".config",
+        ".vscode"
     )) {
-        $FilePath = (Join-Path $SearchPath $FileName)
-        if (-not (Test-Path $FilePath))
-        { continue }
-        $InvokeBuildConfig = (Get-Content $FilePath -Raw | ConvertFrom-Json)
-        break
+        $ConfigFile = (Join-Path $SearchPath $FileName)
+        if (Test-Path $ConfigFile) {
+            $InvokeBuildConfig = (Get-Content $ConfigFile -Raw | ConvertFrom-Json)
+            break
+        }
     }
 }
 
-if ($null -eq $InvokeBuildConfig)
-{ $InvokeBuildConfig = [PSCustomObject]@{} }
+if ($null -eq $InvokeBuildConfig) {
+    $InvokeBuildConfig = [PSCustomObject]@{}
+}
 
 
 # ################################ FUNCTIONS ###################################
 
-function Get-InvokeBuildConfigurationValue {
-    [CmdletBinding(PositionalBinding = $true)]
+function Initialize-InvokeBuildConfigurationValue {
+    [CmdletBinding(PositionalBinding = $false)]
     param (
-        [Parameter(Mandatory = $true, Position = 0)]
+        [Parameter(Position = 0, Mandatory = $true)]
         [string]
-        $Key,
-        [Parameter(Mandatory = $true, Position = 1)]
+        $Name,
+        [Parameter(Mandatory = $true)]
         [object]
-        $Default
+        $Default,
+        [Parameter()]
+        [string]
+        $Help
     )
-    if (-not ($InvokeBuildConfig | Get-Member $Key))
-    { return $Default }
-    return $InvokeBuildConfig | Select-Object -ExpandProperty $Key
+    $InvokeBuildConfig |
+    Add-Member `
+        -MemberType NoteProperty `
+        -Name $Name `
+        -Value $Default
+}
+
+Set-Alias CONFVAL Initialize-InvokeBuildConfigurationValue
+
+function Get-InvokeBuildConfigurationValue {
+    [CmdletBinding(PositionalBinding = $false)]
+    param (
+        [Parameter(Position = 0, Mandatory = $true)]
+        [string]
+        $Name
+    )
+    return $InvokeBuildConfig | Select-Object -ExpandProperty $Name
 }
 
 Set-Alias CONF Get-InvokeBuildConfigurationValue
@@ -48,17 +66,19 @@ Set-Alias CONF Get-InvokeBuildConfigurationValue
 
 # ################################ BUILDSCRIPTS ################################
 
-foreach ($SearchPath in (
-    CONF "paths" @(
+CONFVAL "paths" `
+    -Default @(
         ".",
         ".invoke"
     )
-)) {
-    if (-not (Test-Path $SearchPath))
-    { continue }
-    Get-ChildItem $SearchPath -Filter *.build.ps1 | ForEach-Object {
-        if ($_.FullName -eq $MyInvocation.MyCommand.Definition)
-        { return }
-        . $_.FullName
+
+foreach ($SearchPath in (CONF "paths")) {
+    if (Test-Path $SearchPath) {
+        Get-ChildItem $SearchPath -Filter "*.build.ps1" | ForEach-Object {
+            if ($_.FullName -eq $MyInvocation.MyCommand.Definition) {
+                return
+            }
+            . $_.FullName
+        }
     }
 }
