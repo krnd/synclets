@@ -1,79 +1,66 @@
 #Requires -Version 5.1
 
+# cspell:ignore buildscripts, setupscripts
+# cspell:ignore invokebuild
 
-# ################################ CONFIGURATION ###############################
 
-$InvokeBuildConfig = $null
-foreach ($FileName in @(
-    "invoke.json",
-    "build.json",
-    "invoke-build.json"
-)) {
-    foreach ($SearchPath in @(
-        ".",
-        ".config",
-        ".vscode"
-    )) {
-        $ConfigFile = (Join-Path $SearchPath $FileName)
-        if (Test-Path $ConfigFile) {
-            $InvokeBuildConfig = (Get-Content $ConfigFile -Raw | ConvertFrom-Json)
-            break
-        }
-    }
-}
+# ################################ VARIABLES ###################################
 
-if ($null -eq $InvokeBuildConfig) {
-    $InvokeBuildConfig = [PSCustomObject]@{}
-}
+$script:InvokeBuildPaths = @(
+    ".",
+    ".invoke",
+    ".invokebuild",
+    "invoke",
+    "invoke-build",
+    "invokebuild"
+)
+
+$script:__InvokeBuild_SetupScripts = @()
 
 
 # ################################ FUNCTIONS ###################################
 
-function Initialize-InvokeBuildConfigurationValue {
-    [CmdletBinding(PositionalBinding = $false)]
+function __InvokeBuild_SETUP {
+    [CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = "script")]
     param (
-        [Parameter(Position = 0, Mandatory = $true)]
-        [string]
-        $Name,
-        [Parameter(Mandatory = $true)]
-        [object]
-        $Default,
-        [Parameter()]
-        [string]
-        $Help
+        [Parameter(Position = 0, Mandatory = $true, ParameterSetName = "script")]
+        [scriptblock]
+        $Script,
+        [Parameter(Position = 0, Mandatory = $true, ParameterSetName = "execute")]
+        [switch]
+        $ExecuteAll
+
     )
-    $InvokeBuildConfig |
-    Add-Member `
-        -MemberType NoteProperty `
-        -Name $Name `
-        -Value $Default
+    if ($ExecuteAll) {
+        foreach ($Script in $script:__InvokeBuild_SetupScripts) {
+            & $Script
+        }
+        $script:__InvokeBuild_SetupScripts = @()
+    } else {
+        $script:__InvokeBuild_SetupScripts += $Script
+    }
 }
 
-Set-Alias CONFVAL Initialize-InvokeBuildConfigurationValue
+Set-Alias INVOKEBUILD:SETUP __InvokeBuild_SETUP
 
-function Get-InvokeBuildConfigurationValue {
-    [CmdletBinding(PositionalBinding = $false)]
-    param (
-        [Parameter(Position = 0, Mandatory = $true)]
-        [string]
-        $Name
-    )
-    return $InvokeBuildConfig | Select-Object -ExpandProperty $Name
+
+# ################################ PLUGINS #####################################
+
+foreach ($SearchPath in $script:InvokeBuildPaths) {
+    if (Test-Path $SearchPath -PathType Container) {
+        Get-ChildItem $SearchPath -Filter "*.plugin.ps1" | ForEach-Object {
+            . $_.FullName
+        }
+    }
 }
 
-Set-Alias CONF Get-InvokeBuildConfigurationValue
+INVOKEBUILD:SETUP -ExecuteAll
 
 
 # ################################ BUILDSCRIPTS ################################
 
-CONFVAL "paths" `
-    -Default @(
-        ".",
-        ".invoke"
-    )
-
-foreach ($SearchPath in (CONF "paths")) {
-    if (Test-Path $SearchPath) {
+foreach ($SearchPath in $script:InvokeBuildPaths) {
+    if (Test-Path $SearchPath -PathType Container) {
         Get-ChildItem $SearchPath -Filter "*.build.ps1" | ForEach-Object {
             if ($_.FullName -eq $MyInvocation.MyCommand.Definition) {
                 return
@@ -82,3 +69,5 @@ foreach ($SearchPath in (CONF "paths")) {
         }
     }
 }
+
+INVOKEBUILD:SETUP -ExecuteAll
