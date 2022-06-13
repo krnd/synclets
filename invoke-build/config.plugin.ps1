@@ -19,9 +19,10 @@ INVOKEBUILD:SETUP {
             $ConfigFile = (Join-Path $SearchPath $FileName)
             if (Test-Path $ConfigFile -PathType Leaf) {
                 break
+            } else {
+                $ConfigFile = $null
             }
         }
-        $ConfigFile = $null
     }
 
     DATASTORE:MAKE config `
