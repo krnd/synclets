@@ -21,17 +21,22 @@ function __InvokeBuild_DataStorePlugin_MAKE {
         [hashtable[]]
         $Values
     )
-    $ValueSources = if ($Values) {$Values} else {@{}}
+    $DataTable = @{}
+
     if ($JsonFile) {
-        $ValueSources += $JsonFile | ForEach-Object {
-            (Get-Content $_ -Raw | ConvertFrom-Json)
+        $JsonFile | ForEach-Object {
+            $JsonData = (Get-Content $_ -Raw | ConvertFrom-Json)
+            $JsonData | Get-Member -MemberType NoteProperty | ForEach-Object {
+                $DataTable[$_.Name] = $JsonData.$($_.Name)
+            }
         }
     }
 
-    $DataTable = @{}
-    foreach ($Source in $ValueSources) {
-        foreach ($Key in $Source.Keys) {
-            $DataTable[$Key] = $Source[$Key]
+    if ($Values) {
+        $Values | ForEach-Object {
+            foreach ($Key in $_.Keys) {
+                $DataTable[$Key] = $_[$Key]
+            }
         }
     }
 
