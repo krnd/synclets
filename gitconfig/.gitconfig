@@ -50,10 +50,10 @@
     autocrlf = true
 
 [filter "lfs"]
-    clean = git-lfs clean -- %f
-    process = git-lfs filter-process
-    required = true
-    smudge = git-lfs smudge -- %f
+	clean = git-lfs clean -- %f
+	process = git-lfs filter-process
+	required = true
+	smudge = git-lfs smudge -- %f
 
 [log]
     abbrevCommit = true
