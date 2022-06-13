@@ -23,6 +23,9 @@ INVOKEBUILD:SETUP {
                 $ConfigFile = $null
             }
         }
+        if ($ConfigFile) {
+            break
+        }
     }
 
     DATASTORE:MAKE config `
