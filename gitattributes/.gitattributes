@@ -1,0 +1,163 @@
+########################################
+# Line Endings                         #
+########################################
+
+* text=auto
+
+# Windows
+*.{cmd,[Cc][Mm][Dd]} text eol=crlf
+*.{bat,[Bb][Aa][Tt]} text eol=crlf
+
+# Unix
+*.sh text eol=lf
+
+{{#lfs}}
+
+########################################
+# Large File System (LFS)              #
+########################################
+
+# Archives
+*.7z  filter=lfs diff=lfs merge=lfs -text
+*.cab filter=lfs diff=lfs merge=lfs -text
+*.gz  filter=lfs diff=lfs merge=lfs -text
+*.rar filter=lfs diff=lfs merge=lfs -text
+*.tar filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+
+# Audio
+*.aif  filter=lfs diff=lfs merge=lfs -text
+*.aiff filter=lfs diff=lfs merge=lfs -text
+*.mp3  filter=lfs diff=lfs merge=lfs -text
+*.ogg  filter=lfs diff=lfs merge=lfs -text
+*.wav  filter=lfs diff=lfs merge=lfs -text
+
+# Binary
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.hex filter=lfs diff=lfs merge=lfs -text
+
+# Database
+*.mdb filter=lfs diff=lfs merge=lfs -text
+*.pdb filter=lfs diff=lfs merge=lfs -text
+
+# Documents
+*.doc  filter=lfs diff=lfs merge=lfs -text
+*.docx filter=lfs diff=lfs merge=lfs -text
+*.odb  filter=lfs diff=lfs merge=lfs -text
+*.odf  filter=lfs diff=lfs merge=lfs -text
+*.odg  filter=lfs diff=lfs merge=lfs -text
+*.odi  filter=lfs diff=lfs merge=lfs -text
+*.odp  filter=lfs diff=lfs merge=lfs -text
+*.ods  filter=lfs diff=lfs merge=lfs -text
+*.odt  filter=lfs diff=lfs merge=lfs -text
+*.pdf  filter=lfs diff=lfs merge=lfs -text
+*.ppt  filter=lfs diff=lfs merge=lfs -text
+*.pptx filter=lfs diff=lfs merge=lfs -text
+*.xls  filter=lfs diff=lfs merge=lfs -text
+*.xlsx filter=lfs diff=lfs merge=lfs -text
+
+# Fonts
+*.otf   filter=lfs diff=lfs merge=lfs -text
+*.ttf   filter=lfs diff=lfs merge=lfs -text
+*.woff  filter=lfs diff=lfs merge=lfs -text
+*.woff2 filter=lfs diff=lfs merge=lfs -text
+
+# Images
+*.bmp  filter=lfs diff=lfs merge=lfs -text
+*.gif  filter=lfs diff=lfs merge=lfs -text
+*.ico  filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.jpg  filter=lfs diff=lfs merge=lfs -text
+*.png  filter=lfs diff=lfs merge=lfs -text
+*.ps   filter=lfs diff=lfs merge=lfs -text
+*.psd  filter=lfs diff=lfs merge=lfs -text
+*.svg  filter=lfs diff=lfs merge=lfs -text
+*.tif  filter=lfs diff=lfs merge=lfs -text
+*.tiff filter=lfs diff=lfs merge=lfs -text
+*.xcf  filter=lfs diff=lfs merge=lfs -text
+
+# Video
+*.avi  filter=lfs diff=lfs merge=lfs -text
+*.mov  filter=lfs diff=lfs merge=lfs -text
+*.mpeg filter=lfs diff=lfs merge=lfs -text
+
+# Windows
+*.dll filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
+
+{{/lfs}}
+{{^lfs}}
+
+########################################
+# Binary Files                         #
+########################################
+
+# Archives
+*.7z  binary
+*.cab binary
+*.gz  binary
+*.rar binary
+*.tar binary
+*.zip binary
+
+# Binary
+*.bin binary
+*.hex binary
+
+# Audio
+*.aif  binary
+*.aiff binary
+*.mp3  binary
+*.ogg  binary
+*.wav  binary
+
+# Database
+*.mdb binary
+*.pdb binary
+
+# Documents
+*.doc  binary
+*.docx binary
+*.odb  binary
+*.odf  binary
+*.odg  binary
+*.odi  binary
+*.odp  binary
+*.ods  binary
+*.odt  binary
+*.pdf  binary
+*.ppt  binary
+*.pptx binary
+*.xls  binary
+*.xlsx binary
+
+# Fonts
+*.otf   binary
+*.ttf   binary
+*.woff  binary
+*.woff2 binary
+
+# Images
+*.bmp  binary
+*.gif  binary
+*.ico  binary
+*.jpeg binary
+*.jpg  binary
+*.png  binary
+*.ps   binary
+*.psd  binary
+*.svg  binary
+*.tif  binary
+*.tiff binary
+*.xcf  binary
+
+# Video
+*.avi  binary
+*.mov  binary
+*.mpeg binary
+
+# Windows
+*.dll binary
+*.exe binary
+
+{{/lfs}}
