@@ -36,8 +36,7 @@ BUNDLE:GATHERER FileSystem {
                 -Force `
                 -PassThru
         ) | Where-Object {
-            # Filter for files only.
-            -not $_.GetFileSystemInfos
+            -not ($_.Attributes -band [IO.FileAttributes]::Directory)
         }
     }
 
