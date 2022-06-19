@@ -14,7 +14,7 @@ BUNDLE:TRANSFORMER zip {
         $Path,
         [Parameter(Mandatory = $false)]
         [string]
-        # [ValidateSet("Optimal", "NoCompression", "Fastest")]
+        [ValidateSet("Optimal", "NoCompression", "Fastest")]
         $Compression = "Optimal"
     )
     $ArchiveName = "$Name.zip"
