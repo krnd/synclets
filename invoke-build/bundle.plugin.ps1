@@ -126,9 +126,6 @@ function __InvokeBuild::Bundle::Gatherer {
 Set-Alias BUNDLE:GATHERER __InvokeBuild::Bundle::Gatherer
 
 Get-ChildItem $SearchPath -Filter "bundle.gather.*.ps1" | ForEach-Object {
-    if ($_.FullName -eq $MyInvocation.MyCommand.Definition) {
-        return
-    }
     . $_.FullName
 }
 
