@@ -3,7 +3,7 @@
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild_DeployPlugin_DEPLOY {
+function __InvokeBuild::Deploy::DEPLOY {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -21,9 +21,9 @@ function __InvokeBuild_DeployPlugin_DEPLOY {
     PIPELINE:INVOKE $Script
 }
 
-Set-Alias DEPLOY __InvokeBuild_DeployPlugin_DEPLOY
+Set-Alias DEPLOY __InvokeBuild::Deploy::DEPLOY
 
-function __InvokeBuild_DeployPlugin_TARGET {
+function __InvokeBuild::Deploy::TARGET {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -39,7 +39,7 @@ function __InvokeBuild_DeployPlugin_TARGET {
         [scriptblock]
         $Setup
     )
-    $DeployerName = "__InvokeBuild_DeployPlugin_Deployer_$Name"
+    $DeployerName = "__InvokeBuild::Deploy::Deployer::$Name"
     $Deployer = (Get-Variable $DeployerName -ErrorAction SilentlyContinue)
 
     if (-not $Deployer) {
@@ -54,12 +54,12 @@ function __InvokeBuild_DeployPlugin_TARGET {
     & $Deployer.Value @Parameter
 }
 
-Set-Alias TARGET __InvokeBuild_DeployPlugin_TARGET
+Set-Alias TARGET __InvokeBuild::Deploy::TARGET
 
 
 # ################################ DEPLOYER ####################################
 
-function __InvokeBuild_DeployPlugin_Deployer {
+function __InvokeBuild::Deploy::Deployer {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -71,11 +71,11 @@ function __InvokeBuild_DeployPlugin_Deployer {
     )
     Set-Variable `
         -Scope Script `
-        -Name "__InvokeBuild_DeployPlugin_Deployer_$Name" `
+        -Name "__InvokeBuild::Deploy::Deployer::$Name" `
         -Value $Script
 }
 
-Set-Alias DEPLOY:DEPLOYER __InvokeBuild_DeployPlugin_Deployer
+Set-Alias DEPLOY:DEPLOYER __InvokeBuild::Deploy::Deployer
 
 Get-ChildItem $SearchPath -Filter "deploy.*.ps1" | ForEach-Object {
     if ($_.FullName -eq $MyInvocation.MyCommand.Definition) {

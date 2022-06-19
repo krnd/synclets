@@ -35,7 +35,7 @@ INVOKEBUILD:SETUP {
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild_ConfigPlugin_CONFIGURE {
+function __InvokeBuild::Config::CONFIGURE {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -50,9 +50,9 @@ function __InvokeBuild_ConfigPlugin_CONFIGURE {
         -Default $Default
 }
 
-Set-Alias CONFIGURE __InvokeBuild_ConfigPlugin_CONFIGURE
+Set-Alias CONFIGURE __InvokeBuild::Config::CONFIGURE
 
-function __InvokeBuild_ConfigPlugin_CONF {
+function __InvokeBuild::Config::CONF {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -62,4 +62,4 @@ function __InvokeBuild_ConfigPlugin_CONF {
     return (DATASTORE:GET config $Name)
 }
 
-Set-Alias CONF __InvokeBuild_ConfigPlugin_CONF
+Set-Alias CONF __InvokeBuild::Config::CONF

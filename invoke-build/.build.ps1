@@ -15,12 +15,12 @@ $script:InvokeBuildPaths = @(
     "invokebuild"
 )
 
-$script:__InvokeBuild_SetupScripts = @()
+$script:__InvokeBuild::SetupScripts = @()
 
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild_SETUP {
+function __InvokeBuild::SETUP {
     [CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = "script")]
     param (
         [Parameter(Position = 0, Mandatory = $true, ParameterSetName = "script")]
@@ -32,16 +32,16 @@ function __InvokeBuild_SETUP {
 
     )
     if ($ExecuteAll) {
-        foreach ($Script in $script:__InvokeBuild_SetupScripts) {
+        foreach ($Script in $script:__InvokeBuild::SetupScripts) {
             & $Script
         }
-        $script:__InvokeBuild_SetupScripts = @()
+        $script:__InvokeBuild::SetupScripts = @()
     } else {
-        $script:__InvokeBuild_SetupScripts += $Script
+        $script:__InvokeBuild::SetupScripts += $Script
     }
 }
 
-Set-Alias INVOKEBUILD:SETUP __InvokeBuild_SETUP
+Set-Alias INVOKEBUILD:SETUP __InvokeBuild::SETUP
 
 
 # ################################ PLUGINS #####################################

@@ -3,7 +3,7 @@
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild_PipelinePlugin_SETUP {
+function __InvokeBuild::Pipeline::SETUP {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -19,11 +19,11 @@ function __InvokeBuild_PipelinePlugin_SETUP {
         })
 }
 
-Set-Alias PIPELINE __InvokeBuild_PipelinePlugin_SETUP
+Set-Alias PIPELINE __InvokeBuild::Pipeline::SETUP
 
-Set-Alias PIPELINE:SETUP __InvokeBuild_PipelinePlugin_SETUP
+Set-Alias PIPELINE:SETUP __InvokeBuild::Pipeline::SETUP
 
-function __InvokeBuild_PipelinePlugin_INVOKE {
+function __InvokeBuild::Pipeline::INVOKE {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -34,9 +34,9 @@ function __InvokeBuild_PipelinePlugin_INVOKE {
     $Script.Invoke($Pipeline)
 }
 
-Set-Alias PIPELINE:INVOKE __InvokeBuild_PipelinePlugin_INVOKE
+Set-Alias PIPELINE:INVOKE __InvokeBuild::Pipeline::INVOKE
 
-function __InvokeBuild_PipelinePlugin_GET {
+function __InvokeBuild::Pipeline::GET {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -46,4 +46,4 @@ function __InvokeBuild_PipelinePlugin_GET {
     return (DATASTORE:GET pipeline $Name)
 }
 
-Set-Alias PIPELINE:GET __InvokeBuild_PipelinePlugin_GET
+Set-Alias PIPELINE:GET __InvokeBuild::Pipeline::GET

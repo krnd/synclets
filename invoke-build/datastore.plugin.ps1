@@ -3,12 +3,12 @@
 
 # ################################ VARIABLES ###################################
 
-$script:__InvokeBuild_DataStore = @{}
+$script:__InvokeBuild::DataStore = @{}
 
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild_DataStorePlugin_MAKE {
+function __InvokeBuild::DataStore::MAKE {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -46,31 +46,31 @@ function __InvokeBuild_DataStorePlugin_MAKE {
         -Name "__DataStoreName" `
         -Value $Name
 
-    $script:__InvokeBuild_DataStore[$Name] = $DataStore
+    $script:__InvokeBuild::DataStore[$Name] = $DataStore
 }
 
-Set-Alias DATASTORE __InvokeBuild_DataStorePlugin_MAKE
+Set-Alias DATASTORE __InvokeBuild::DataStore::MAKE
 
-Set-Alias DATASTORE:MAKE __InvokeBuild_DataStorePlugin_MAKE
-Set-Alias DS:MAKE __InvokeBuild_DataStorePlugin_MAKE
+Set-Alias DATASTORE:MAKE __InvokeBuild::DataStore::MAKE
+Set-Alias DS:MAKE __InvokeBuild::DataStore::MAKE
 
-function __InvokeBuild_DataStorePlugin_OBJECT {
+function __InvokeBuild::DataStore::OBJECT {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
         [string]
         $StoreName
     )
-    if (-not $script:__InvokeBuild_DataStore.ContainsKey($StoreName)) {
+    if (-not $script:__InvokeBuild::DataStore.ContainsKey($StoreName)) {
         throw "Missing DATASTORE '$StoreName'. ($($Task.Name))"
     }
-    return $script:__InvokeBuild_DataStore[$StoreName]
+    return $script:__InvokeBuild::DataStore[$StoreName]
 }
 
-Set-Alias DATASTORE:OBJECT __InvokeBuild_DataStorePlugin_OBJECT
-Set-Alias DS:OBJECT __InvokeBuild_DataStorePlugin_OBJECT
+Set-Alias DATASTORE:OBJECT __InvokeBuild::DataStore::OBJECT
+Set-Alias DS:OBJECT __InvokeBuild::DataStore::OBJECT
 
-function __InvokeBuild_DataStorePlugin_VALUE {
+function __InvokeBuild::DataStore::VALUE {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -83,10 +83,10 @@ function __InvokeBuild_DataStorePlugin_VALUE {
         [object]
         $Default
     )
-    if (-not $script:__InvokeBuild_DataStore.ContainsKey($StoreName)) {
+    if (-not $script:__InvokeBuild::DataStore.ContainsKey($StoreName)) {
         throw "Missing DATASTORE '$StoreName'. ($($Task.Name))"
     }
-    $DataStore = $script:__InvokeBuild_DataStore[$StoreName]
+    $DataStore = $script:__InvokeBuild::DataStore[$StoreName]
 
     if (($null -eq $DataStore.PSObject.Properties.Name) -or `
             -not $DataStore.PSObject.Properties.Name.Contains($Name)) {
@@ -97,10 +97,10 @@ function __InvokeBuild_DataStorePlugin_VALUE {
     }
 }
 
-Set-Alias DATASTORE:VALUE __InvokeBuild_DataStorePlugin_VALUE
-Set-Alias DS:VALUE __InvokeBuild_DataStorePlugin_VALUE
+Set-Alias DATASTORE:VALUE __InvokeBuild::DataStore::VALUE
+Set-Alias DS:VALUE __InvokeBuild::DataStore::VALUE
 
-function __InvokeBuild_DataStorePlugin_GET {
+function __InvokeBuild::DataStore::GET {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -110,10 +110,10 @@ function __InvokeBuild_DataStorePlugin_GET {
         [string]
         $Name
     )
-    if (-not $script:__InvokeBuild_DataStore.ContainsKey($StoreName)) {
+    if (-not $script:__InvokeBuild::DataStore.ContainsKey($StoreName)) {
         throw "Missing DATASTORE '$StoreName'. ($($Task.Name))"
     }
-    $DataStore = $script:__InvokeBuild_DataStore[$StoreName]
+    $DataStore = $script:__InvokeBuild::DataStore[$StoreName]
 
     if (-not $DataStore.PSObject.Properties.Name.Contains($Name)) {
         throw "Missing DATASTORE key '$StoreName::$Name'. ($($Task.Name))"
@@ -121,5 +121,5 @@ function __InvokeBuild_DataStorePlugin_GET {
     return $DataStore.$Name
 }
 
-Set-Alias DATASTORE:GET __InvokeBuild_DataStorePlugin_GET
-Set-Alias DS:GET __InvokeBuild_DataStorePlugin_GET
+Set-Alias DATASTORE:GET __InvokeBuild::DataStore::GET
+Set-Alias DS:GET __InvokeBuild::DataStore::GET

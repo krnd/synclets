@@ -3,7 +3,7 @@
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild_BundlePlugin_BUNDLE {
+function __InvokeBuild::Bundle::BUNDLE {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -44,9 +44,9 @@ function __InvokeBuild_BundlePlugin_BUNDLE {
     }
 }
 
-Set-Alias BUNDLE __InvokeBuild_BundlePlugin_BUNDLE
+Set-Alias BUNDLE __InvokeBuild::Bundle::BUNDLE
 
-function __InvokeBuild_BundlePlugin_GATHER {
+function __InvokeBuild::Bundle::GATHER {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -59,7 +59,7 @@ function __InvokeBuild_BundlePlugin_GATHER {
         [scriptblock]
         $Process
     )
-    $GathererName = "__InvokeBuild_BundlePlugin_Gatherer_$Name"
+    $GathererName = "__InvokeBuild::Bundle::Gatherer::$Name"
     $Gatherer = (Get-Variable $GathererName -ErrorAction SilentlyContinue)
 
     if (-not $Gatherer) {
@@ -73,9 +73,9 @@ function __InvokeBuild_BundlePlugin_GATHER {
     }
 }
 
-Set-Alias GATHER __InvokeBuild_BundlePlugin_GATHER
+Set-Alias GATHER __InvokeBuild::Bundle::GATHER
 
-function __InvokeBuild_BundlePlugin_TRANSFORM {
+function __InvokeBuild::Bundle::TRANSFORM {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -88,7 +88,7 @@ function __InvokeBuild_BundlePlugin_TRANSFORM {
         [switch]
         $Export
     )
-    $TransformerName = "__InvokeBuild_BundlePlugin_Transformer_$Name"
+    $TransformerName = "__InvokeBuild::Bundle::Transformer::$Name"
     $Transformer = (Get-Variable $TransformerName -ErrorAction SilentlyContinue)
 
     if (-not $Transformer) {
@@ -102,12 +102,12 @@ function __InvokeBuild_BundlePlugin_TRANSFORM {
     }
 }
 
-Set-Alias TRANSFORM __InvokeBuild_BundlePlugin_TRANSFORM
+Set-Alias TRANSFORM __InvokeBuild::Bundle::TRANSFORM
 
 
 # ################################ GATHERER ####################################
 
-function __InvokeBuild_BundlePlugin_Gatherer {
+function __InvokeBuild::Bundle::Gatherer {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -119,11 +119,11 @@ function __InvokeBuild_BundlePlugin_Gatherer {
     )
     Set-Variable `
         -Scope Script `
-        -Name "__InvokeBuild_BundlePlugin_Gatherer_$Name" `
+        -Name "__InvokeBuild::Bundle::Gatherer::$Name" `
         -Value $Script
 }
 
-Set-Alias BUNDLE:GATHERER __InvokeBuild_BundlePlugin_Gatherer
+Set-Alias BUNDLE:GATHERER __InvokeBuild::Bundle::Gatherer
 
 Get-ChildItem $SearchPath -Filter "bundle.gather.*.ps1" | ForEach-Object {
     if ($_.FullName -eq $MyInvocation.MyCommand.Definition) {
@@ -135,7 +135,7 @@ Get-ChildItem $SearchPath -Filter "bundle.gather.*.ps1" | ForEach-Object {
 
 # ################################ TRANSFORMER #################################
 
-function __InvokeBuild_BundlePlugin_Transformer {
+function __InvokeBuild::Bundle::Transformer {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Position = 0, Mandatory = $true)]
@@ -147,11 +147,11 @@ function __InvokeBuild_BundlePlugin_Transformer {
     )
     Set-Variable `
         -Scope Script `
-        -Name "__InvokeBuild_BundlePlugin_Transformer_$Name" `
+        -Name "__InvokeBuild::Bundle::Transformer::$Name" `
         -Value $Script
 }
 
-Set-Alias BUNDLE:TRANSFORMER __InvokeBuild_BundlePlugin_Transformer
+Set-Alias BUNDLE:TRANSFORMER __InvokeBuild::Bundle::Transformer
 
 Get-ChildItem $SearchPath -Filter "bundle.transform.*.ps1" | ForEach-Object {
     . $_.FullName
