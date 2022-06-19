@@ -41,7 +41,7 @@ function InvokeBuild::PSModule::Get-ModuleName {
             continue
         }
 
-        $RootModule = (Join-Path $Module.FullName $Manifest.RootModule)
+        $RootModule = (Join-Path $Directory.FullName $Manifest.RootModule)
         if ((Test-Path $RootModule -PathType Leaf) `
                 -and ((Get-Item $RootModule).Extension -eq ".psm1")) {
             return $Directory.Name
