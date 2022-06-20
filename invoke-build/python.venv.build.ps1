@@ -32,13 +32,14 @@ TASK python:venv:setup python:venv:deactivate, {
     }
 }, python:venv:activate, {
     python -m pip install --upgrade pip
-
     pip install pip-tools
 
     $RequirementsFile = (CONF python.venv.requirements)
     if (Test-Path $RequirementsFile -PathType Leaf) {
         pip-sync $RequirementsFile
     }
+
+    pip install pip-tools
 }
 
 TASK python:venv:clean python:venv:deactivate, {
