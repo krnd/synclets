@@ -1,3 +1,5 @@
+# flake8 5.0.4
+
 [flake8]
 #   http://flake8.pycqa.org/en/latest/user/options.html
 #   http://flake8.pycqa.org/en/latest/user/error-codes.html
