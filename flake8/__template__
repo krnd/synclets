@@ -1,0 +1,8 @@
+{
+    ".flake8": {
+        "ignores": {
+            "pattern": "string",
+            "codes": "string"
+        }
+    }
+}

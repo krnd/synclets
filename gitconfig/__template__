@@ -1,0 +1,8 @@
+{
+    ".gitconfig": {
+        "urls": {
+            "path": "string",
+            "name": "string"
+        }
+    }
+}
