@@ -6,6 +6,7 @@
 
 # ################################ VARIABLES ###################################
 
+# TODO Move '$script:InvokeBuildPaths' to '$script:__InvokeBuild::Paths'.
 $script:InvokeBuildPaths = @(
     ".",
     ".invoke",
@@ -15,6 +16,7 @@ $script:InvokeBuildPaths = @(
     "invokebuild"
 )
 
+$script:__InvokeBuild = @{}
 $script:__InvokeBuild::SetupScripts = @()
 
 
@@ -65,6 +67,7 @@ foreach ($SearchPath in $script:InvokeBuildPaths) {
             if ($_.FullName -eq $MyInvocation.MyCommand.Definition) {
                 return
             }
+            Write-Host $_.FullName
             . $_.FullName
         }
     }
