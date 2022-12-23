@@ -13,4 +13,4 @@ The following synclets need to be revisited:
 - [ ] pipeline.plugin.ps1
 - [ ] psmodule.build.ps1
 - [ ] pssyncle.build.ps1
-- [ ] python.venv.build.ps1
+- [x] python.venv.build.ps1 &larr; python.venv.build.ps1

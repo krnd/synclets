@@ -1,7 +1,5 @@
 #Requires -Version 5.1
 
-# cspell:ignore venv
-
 
 # ################################ CONFIGURATION ###############################
 
@@ -10,6 +8,8 @@ CONFIGURE python.venv.path `
 
 CONFIGURE python.venv.requirements `
     -Default "requirements.txt"
+CONFIGURE python.venv.requirements.sources `
+    -Default @()
 
 
 # ################################ TASKS #######################################
@@ -27,19 +27,32 @@ TASK python:venv:deactivate {
 
 TASK python:venv:setup python:venv:deactivate, {
     $VirtualEnvironmentPath = (CONF python.venv.path)
-    if (-not (Test-Path $VirtualEnvironmentPath)) {
+    if (-not (Test-Path $VirtualEnvironmentPath -PathType Container)) {
         py -m venv $VirtualEnvironmentPath
     }
 }, python:venv:activate, {
     python -m pip install --upgrade pip
     pip install pip-tools
-
+}, python:venv:compile, {
     $RequirementsFile = (CONF python.venv.requirements)
     if (Test-Path $RequirementsFile -PathType Leaf) {
         pip-sync $RequirementsFile
     }
-
     pip install pip-tools
+}
+
+TASK python:venv:compile python:venv:activate, {
+    $RequirementsSources = (CONF python.venv.requirements.sources)
+    if (-not $RequirementsSources) {
+        $RequirementsFile = (CONF python.venv.requirements)
+        $RequirementsSources += [IO.Path]::ChangeExtension(
+            $RequirementsFile, "in")
+    }
+    $RequirementsSources | ForEach-Object {
+        if (Test-Path $_ -PathType Leaf) {
+            pip-compile --quiet $_
+        }
+    }
 }
 
 TASK python:venv:clean python:venv:deactivate, {
