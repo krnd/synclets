@@ -80,6 +80,7 @@ function __InvokeBuild::DataStore::VALUE {
         [string]
         $Name,
         [Parameter(Mandatory = $true)]
+        [AllowNull()]
         [object]
         $Default
     )
@@ -88,8 +89,12 @@ function __InvokeBuild::DataStore::VALUE {
     }
     $DataStore = $script:__InvokeBuild::DataStore[$StoreName]
 
-    if (($null -eq $DataStore.PSObject.Properties.Name) -or `
-            -not $DataStore.PSObject.Properties.Name.Contains($Name)) {
+    if (($null -ne $DataStore.PSObject.Properties.Name) `
+            -and $DataStore.PSObject.Properties.Name.Contains($Name)) {
+        if ($null -eq $DataStore.$Name) {
+            $DataStore.$Name = $Default
+        }
+    } else {
         $DataStore | Add-Member `
             -MemberType NoteProperty `
             -Name $Name `
@@ -117,6 +122,8 @@ function __InvokeBuild::DataStore::GET {
 
     if (-not $DataStore.PSObject.Properties.Name.Contains($Name)) {
         throw "Missing DATASTORE key '$StoreName::$Name'. ($($Task.Name))"
+    } elseif ($null -eq $DataStore.$Name) {
+        throw "Unspecified DATASTORE key '$StoreName::$Name'. ($($Task.Name))"
     }
     return $DataStore.$Name
 }

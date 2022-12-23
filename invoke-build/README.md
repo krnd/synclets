@@ -7,7 +7,7 @@ The following synclets need to be revisited:
 - [ ] bundle.plugin.ps1
 - [ ] bundle.transform.zip.ps1
 - [x] config.plugin.ps1
-- [ ] datastore.plugin.ps1
+- [x] datastore.plugin.ps1
 - [ ] deploy.filesystem.ps1
 - [ ] deploy.plugin.ps1
 - [ ] pipeline.plugin.ps1
