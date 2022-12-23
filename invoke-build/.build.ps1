@@ -1,22 +1,19 @@
 #Requires -Version 5.1
 
-# cspell:ignore buildscripts, setupscripts
-# cspell:ignore invokebuild
-
 
 # ################################ VARIABLES ###################################
 
-# TODO Move '$script:InvokeBuildPaths' to '$script:__InvokeBuild::Paths'.
-$script:InvokeBuildPaths = @(
+$script:__InvokeBuild = @{}
+
+$script:__InvokeBuild::Paths = @(
     ".",
     ".invoke",
     ".invokebuild",
     "invoke",
-    "invoke-build",
-    "invokebuild"
+    "invokebuild",
+    "invoke-build"
 )
 
-$script:__InvokeBuild = @{}
 $script:__InvokeBuild::SetupScripts = @()
 
 
@@ -28,7 +25,7 @@ function __InvokeBuild::SETUP {
         [Parameter(Position = 0, Mandatory = $true, ParameterSetName = "script")]
         [scriptblock]
         $Script,
-        [Parameter(Position = 0, Mandatory = $true, ParameterSetName = "execute")]
+        [Parameter(Mandatory = $true, ParameterSetName = "execute")]
         [switch]
         $ExecuteAll
 
@@ -48,7 +45,7 @@ Set-Alias INVOKEBUILD:SETUP __InvokeBuild::SETUP
 
 # ################################ PLUGINS #####################################
 
-foreach ($SearchPath in $script:InvokeBuildPaths) {
+foreach ($SearchPath in $script:__InvokeBuild::Paths) {
     if (Test-Path $SearchPath -PathType Container) {
         Get-ChildItem $SearchPath -Filter "*.plugin.ps1" | ForEach-Object {
             . $_.FullName
@@ -61,13 +58,14 @@ INVOKEBUILD:SETUP -ExecuteAll
 
 # ################################ BUILDSCRIPTS ################################
 
-foreach ($SearchPath in $script:InvokeBuildPaths) {
+foreach ($SearchPath in $script:__InvokeBuild::Paths) {
     if (Test-Path $SearchPath -PathType Container) {
-        Get-ChildItem $SearchPath -Filter "*.build.ps1" | ForEach-Object {
+        Get-ChildItem $SearchPath -Filter "*.ps1" | ForEach-Object {
             if ($_.FullName -eq $MyInvocation.MyCommand.Definition) {
                 return
+            } elseif ($_.Name.EndsWith(".plugin.ps1")) {
+                return
             }
-            Write-Host $_.FullName
             . $_.FullName
         }
     }

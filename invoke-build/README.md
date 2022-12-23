@@ -2,7 +2,7 @@
 
 ## Task
 The following synclets need to be revisited:
-- [ ] .build.ps1
+- [x] .build.ps1
 - [ ] bundle.gather.filesystem.ps1
 - [ ] bundle.plugin.ps1
 - [ ] bundle.transform.zip.ps1
