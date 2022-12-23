@@ -6,7 +6,7 @@ The following synclets need to be revisited:
 - [ ] bundle.gather.filesystem.ps1
 - [ ] bundle.plugin.ps1
 - [ ] bundle.transform.zip.ps1
-- [ ] config.plugin.ps1
+- [x] config.plugin.ps1
 - [ ] datastore.plugin.ps1
 - [ ] deploy.filesystem.ps1
 - [ ] deploy.plugin.ps1

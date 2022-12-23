@@ -1,6 +1,9 @@
 #Requires -Version 5.1
 
-# cspell:ignore invokebuild
+
+# ################################ VARIABLES ###################################
+
+$script:__InvokeBuild::Config = @{}
 
 
 # ################################ INVOKEBUILD #################################
@@ -8,14 +11,14 @@
 INVOKEBUILD:SETUP {
     $ConfigFile = $null
     foreach ($SearchPath in @(
-        ".config"
-    ) + $script:InvokeBuildPaths) {
+            ".config"
+        ) + $script:__InvokeBuild::Paths) {
         foreach ($FileName in @(
-            "invoke.json",
-            "build.json",
-            "invoke-build.json",
-            "invokebuild.json"
-        )) {
+                "invoke.json",
+                "build.json",
+                "invokebuild.json",
+                "invoke-build.json"
+            )) {
             $ConfigFile = (Join-Path $SearchPath $FileName)
             if (Test-Path $ConfigFile -PathType Leaf) {
                 break
@@ -41,9 +44,9 @@ function __InvokeBuild::Config::CONFIGURE {
         [Parameter(Position = 0, Mandatory = $true)]
         [string]
         $Name,
-        [Parameter(Position = 1, Mandatory = $true)]
+        [Parameter()]
         [object]
-        $Default
+        $Default = $null
     )
     DATASTORE:VALUE config `
         -Name $Name `
