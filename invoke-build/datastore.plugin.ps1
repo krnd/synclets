@@ -3,130 +3,151 @@
 
 # ################################ VARIABLES ###################################
 
-$script:__InvokeBuild::DataStore = @{}
+$script:__InvokeBuild::Plugin::DataStore = @{
+    File   = $MyInvocation.MyCommand.Name
+    Prefix = "DATASTORE"
+    Stores = @{}
+}
 
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild::DataStore::MAKE {
+function __InvokeBuild::Plugin::DataStore::*MAKE {
     [CmdletBinding(PositionalBinding = $false)]
     param (
-        [Parameter(Position = 0, Mandatory = $true)]
+        [Parameter(Mandatory, Position = 0)]
         [string]
         $Name,
         [Parameter()]
-        [string[]]
-        $JsonFile,
+        [string]
+        $File = $null,
         [Parameter()]
-        [hashtable[]]
-        $Values
+        [hashtable]
+        $Values = $null
     )
-    $DataTable = @{}
+    $PLUGIN = $script:__InvokeBuild::Plugin::DataStore
 
-    if ($JsonFile) {
-        $JsonFile | ForEach-Object {
-            $JsonData = (Get-Content $_ -Raw | ConvertFrom-Json)
-            $JsonData | Get-Member -MemberType NoteProperty | ForEach-Object {
-                $DataTable[$_.Name] = $JsonData.$($_.Name)
-            }
+    if ($PLUGIN::Stores.ContainsKey($Name)) {
+        throw "[$($PLUGIN::Prefix):MAKE] " `
+            + "Data store '$Name' already exists."
+    }
+    $DataStore = @{}
+
+    if ($File) {
+        $Json = (Get-Content $File -Raw | ConvertFrom-Json)
+        $Json.PSObject.Properties | ForEach-Object {
+            $DataStore[$_.Name] = $_.Value
         }
     }
 
     if ($Values) {
-        $Values | ForEach-Object {
-            foreach ($Key in $_.Keys) {
-                $DataTable[$Key] = $_[$Key]
-            }
+        foreach ($Key in $Values.Keys) {
+            $DataStore[$Key] = $Values[$Key]
         }
     }
 
-    $DataStore = [PSCustomObject]$DataTable
-    $DataStore | Add-Member `
-        -MemberType NoteProperty `
-        -Name "__DataStoreName" `
-        -Value $Name
-
-    $script:__InvokeBuild::DataStore[$Name] = $DataStore
-}
-
-Set-Alias DATASTORE __InvokeBuild::DataStore::MAKE
-
-Set-Alias DATASTORE:MAKE __InvokeBuild::DataStore::MAKE
-Set-Alias DS:MAKE __InvokeBuild::DataStore::MAKE
-
-function __InvokeBuild::DataStore::OBJECT {
-    [CmdletBinding(PositionalBinding = $false)]
-    param (
-        [Parameter(Position = 0, Mandatory = $true)]
-        [string]
-        $StoreName
+    $PLUGIN::Stores[$Name] = (
+        $DataStore + @{
+            __Name = $Name
+        }
     )
-    if (-not $script:__InvokeBuild::DataStore.ContainsKey($StoreName)) {
-        throw "Missing DATASTORE '$StoreName'. ($($Task.Name))"
-    }
-    return $script:__InvokeBuild::DataStore[$StoreName]
 }
 
-Set-Alias DATASTORE:OBJECT __InvokeBuild::DataStore::OBJECT
-Set-Alias DS:OBJECT __InvokeBuild::DataStore::OBJECT
+Set-Alias DATASTORE:MAKE __InvokeBuild::Plugin::DataStore::*MAKE
 
-function __InvokeBuild::DataStore::VALUE {
+function __InvokeBuild::Plugin::DataStore::*OBJECT {
     [CmdletBinding(PositionalBinding = $false)]
     param (
-        [Parameter(Position = 0, Mandatory = $true)]
-        [string]
-        $StoreName,
-        [Parameter(Position = 1, Mandatory = $true)]
+        [Parameter(Mandatory, Position = 0)]
         [string]
         $Name,
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet("Empty", "Null", $null)]
+        [string]
+        $Default
+    )
+    $PLUGIN = $script:__InvokeBuild::Plugin::DataStore
+
+    if (-not $PLUGIN::Stores.ContainsKey($Name)) {
+        switch ($Default) {
+            "Empty" { return @{} }
+            "Null" { return $null }
+        }
+        throw "[$($PLUGIN::Prefix):OBJECT] " `
+            + "Data store '$Name' not found."
+    }
+    $DataStore = $PLUGIN::Stores[$Name]
+
+    return $DataStore
+}
+
+Set-Alias DATASTORE:OBJECT __InvokeBuild::Plugin::DataStore::*OBJECT
+
+function __InvokeBuild::Plugin::DataStore::*VALUE {
+    [CmdletBinding(PositionalBinding = $false)]
+    param (
+        [Parameter(Mandatory, Position = 0)]
+        [string]
+        $Store,
+        [Parameter(Mandatory, Position = 1)]
+        [string]
+        $Name,
+        [Parameter(Mandatory)]
         [AllowNull()]
         [object]
         $Default
     )
-    if (-not $script:__InvokeBuild::DataStore.ContainsKey($StoreName)) {
-        throw "Missing DATASTORE '$StoreName'. ($($Task.Name))"
-    }
-    $DataStore = $script:__InvokeBuild::DataStore[$StoreName]
+    $PLUGIN = $script:__InvokeBuild::Plugin::DataStore
 
-    if (($null -ne $DataStore.PSObject.Properties.Name) `
-            -and $DataStore.PSObject.Properties.Name.Contains($Name)) {
-        if ($null -eq $DataStore.$Name) {
-            $DataStore.$Name = $Default
-        }
-    } else {
-        $DataStore | Add-Member `
-            -MemberType NoteProperty `
-            -Name $Name `
-            -Value $Default
+    if (-not $PLUGIN::Stores.ContainsKey($Store)) {
+        throw "[$($PLUGIN::Prefix):VALUE] " `
+            + "Data store '$Store' not found."
+    }
+    $DataStore = $PLUGIN::Stores[$Store]
+
+    if (-not $DataStore.ContainsKey($Name)) {
+        $DataStore[$Name] = $Default
+    } elseif ($null -eq $DataStore[$Name]) {
+        $DataStore[$Name] = $Default
     }
 }
 
-Set-Alias DATASTORE:VALUE __InvokeBuild::DataStore::VALUE
-Set-Alias DS:VALUE __InvokeBuild::DataStore::VALUE
+Set-Alias DATASTORE:VALUE __InvokeBuild::Plugin::DataStore::*VALUE
 
-function __InvokeBuild::DataStore::GET {
+function __InvokeBuild::Plugin::DataStore::*GET {
     [CmdletBinding(PositionalBinding = $false)]
     param (
-        [Parameter(Position = 0, Mandatory = $true)]
+        [Parameter(Mandatory, Position = 0)]
         [string]
-        $StoreName,
-        [Parameter(Position = 1, Mandatory = $true)]
+        $Store,
+        [Parameter(Mandatory, Position = 1)]
         [string]
-        $Name
+        $Name,
+        [Parameter()]
+        [object]
+        $Default = $null
     )
-    if (-not $script:__InvokeBuild::DataStore.ContainsKey($StoreName)) {
-        throw "Missing DATASTORE '$StoreName'. ($($Task.Name))"
-    }
-    $DataStore = $script:__InvokeBuild::DataStore[$StoreName]
+    $PLUGIN = $script:__InvokeBuild::Plugin::DataStore
 
-    if (-not $DataStore.PSObject.Properties.Name.Contains($Name)) {
-        throw "Missing DATASTORE key '$StoreName::$Name'. ($($Task.Name))"
-    } elseif ($null -eq $DataStore.$Name) {
-        throw "Unspecified DATASTORE key '$StoreName::$Name'. ($($Task.Name))"
+    if (-not $PLUGIN::Stores.ContainsKey($Store)) {
+        throw "[$($PLUGIN::Prefix):GET] " `
+            + "Data store '$Store' not found."
     }
-    return $DataStore.$Name
+    $DataStore = $PLUGIN::Stores[$Store]
+
+    if (-not $DataStore.ContainsKey($Name)) {
+        throw "[$($PLUGIN::Prefix):GET] " `
+            + "Data store value '$Store[$Name]' not found."
+    }
+    $Value = $DataStore[$Name]
+
+    if ($null -eq $Value) {
+        if ($null -ne $Default) { return $Default }
+        throw "[$($PLUGIN::Prefix):GET] " `
+            + "Data store value '$Store[$Name]' not specified."
+    }
+
+    return $Value
 }
 
-Set-Alias DATASTORE:GET __InvokeBuild::DataStore::GET
-Set-Alias DS:GET __InvokeBuild::DataStore::GET
+Set-Alias DATASTORE:GET __InvokeBuild::Plugin::DataStore::*GET
