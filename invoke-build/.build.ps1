@@ -3,44 +3,46 @@
 
 # ################################ VARIABLES ###################################
 
-$script:__InvokeBuild = @{}
-
-$script:__InvokeBuild::Paths = @(
-    ".",
-    ".invoke",
-    ".invokebuild",
-    "invoke",
-    "invokebuild",
-    "invoke-build"
-)
-
-$script:__InvokeBuild::SetupScripts = @()
+$script:__InvokeBuild = @{
+    Plugin = @{}
+    Setup  = @()
+    Paths  = @(
+        ".",
+        ".invoke",
+        ".invokebuild",
+        "invoke",
+        "invokebuild",
+        "invoke-build"
+    )
+}
 
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild::SETUP {
+function __InvokeBuild::*SETUP {
     [CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = "script")]
     param (
-        [Parameter(Position = 0, Mandatory = $true, ParameterSetName = "script")]
+        [Parameter(Mandatory, Position = 0, ParameterSetName = "script")]
         [scriptblock]
         $Script,
-        [Parameter(Mandatory = $true, ParameterSetName = "execute")]
+        [Parameter(Mandatory, ParameterSetName = "execute")]
         [switch]
         $ExecuteAll
 
     )
+    $INVOKE = $script:__InvokeBuild
+
     if ($ExecuteAll) {
-        foreach ($Script in $script:__InvokeBuild::SetupScripts) {
+        foreach ($Script in $INVOKE::Setup) {
             & $Script
         }
-        $script:__InvokeBuild::SetupScripts = @()
+        $INVOKE::Setup = @()
     } else {
-        $script:__InvokeBuild::SetupScripts += $Script
+        $INVOKE::Setup += $Script
     }
 }
 
-Set-Alias INVOKEBUILD:SETUP __InvokeBuild::SETUP
+Set-Alias INVOKEBUILD:SETUP __InvokeBuild::*SETUP
 
 
 # ################################ PLUGINS #####################################
@@ -48,6 +50,9 @@ Set-Alias INVOKEBUILD:SETUP __InvokeBuild::SETUP
 foreach ($SearchPath in $script:__InvokeBuild::Paths) {
     if (Test-Path $SearchPath -PathType Container) {
         Get-ChildItem $SearchPath -Filter "*.plugin.ps1" | ForEach-Object {
+            $WritePath = if ($SearchPath -eq ".") { "." } `
+                else { Resolve-Path $_.Directory -Relative }
+            Write-Verbose "Plugin $_ ($WritePath)"
             . $_.FullName
         }
     }
@@ -60,12 +65,13 @@ INVOKEBUILD:SETUP -ExecuteAll
 
 foreach ($SearchPath in $script:__InvokeBuild::Paths) {
     if (Test-Path $SearchPath -PathType Container) {
-        Get-ChildItem $SearchPath -Filter "*.ps1" | ForEach-Object {
+        Get-ChildItem $SearchPath -Filter "*.build.ps1" | ForEach-Object {
             if ($_.FullName -eq $MyInvocation.MyCommand.Definition) {
                 return
-            } elseif ($_.Name.EndsWith(".plugin.ps1")) {
-                return
             }
+            $WritePath = if ($SearchPath -eq ".") { "." } `
+                else { Resolve-Path $_.Directory -Relative }
+            Write-Verbose "Tasks $_ ($WritePath)"
             . $_.FullName
         }
     }
