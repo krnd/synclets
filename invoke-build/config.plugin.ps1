@@ -3,66 +3,83 @@
 
 # ################################ VARIABLES ###################################
 
-$script:__InvokeBuild::Config = @{}
+$script:__InvokeBuild::Plugin::Config = @{
+    File      = $MyInvocation.MyCommand.Name
+    Prefix    = "CONFIG"
+    Paths     = @(
+        ".config",
+        "config"
+    )
+    FileNames = @(
+        "invoke.json",
+        "build.json",
+        "invokebuild.json",
+        "invoke-build.json"
+    )
+}
 
 
 # ################################ INVOKEBUILD #################################
 
 INVOKEBUILD:SETUP {
-    $ConfigFile = $null
-    foreach ($SearchPath in @(
-            ".config"
-        ) + $script:__InvokeBuild::Paths) {
-        foreach ($FileName in @(
-                "invoke.json",
-                "build.json",
-                "invokebuild.json",
-                "invoke-build.json"
-            )) {
-            $ConfigFile = (Join-Path $SearchPath $FileName)
-            if (Test-Path $ConfigFile -PathType Leaf) {
+    $INVOKE = $script:__InvokeBuild
+    $PLUGIN = $script:__InvokeBuild::Plugin::Config
+
+    $FilePath = $null
+    foreach ($SearchPath in ($INVOKE::Paths + $PLUGIN::Paths)) {
+        foreach ($FileName in $PLUGIN::FileNames) {
+            $FilePath = (Join-Path $SearchPath $FileName)
+            if (Test-Path $FilePath -PathType Leaf) {
                 break
             } else {
-                $ConfigFile = $null
+                $FilePath = $null
             }
         }
-        if ($ConfigFile) {
+        if ($FilePath) {
             break
         }
     }
 
-    DATASTORE:MAKE config `
-        -JsonFile $ConfigFile
+    DATASTORE:MAKE _config `
+        -File $FilePath
 }
 
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild::Config::CONFIGURE {
+function __InvokeBuild::Plugin::Config::*VALUE {
     [CmdletBinding(PositionalBinding = $false)]
     param (
-        [Parameter(Position = 0, Mandatory = $true)]
+        [Parameter(Mandatory, Position = 0)]
         [string]
         $Name,
         [Parameter()]
         [object]
         $Default = $null
     )
-    DATASTORE:VALUE config `
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
+    $PLUGIN = $script:__InvokeBuild::Plugin::Config
+
+    DATASTORE:VALUE _config `
         -Name $Name `
         -Default $Default
 }
 
-Set-Alias CONFIGURE __InvokeBuild::Config::CONFIGURE
+Set-Alias CONFIG:VALUE __InvokeBuild::Plugin::Config::*VALUE
+Set-Alias CONFIGURE __InvokeBuild::Plugin::Config::*VALUE
 
-function __InvokeBuild::Config::CONF {
+function __InvokeBuild::Plugin::Config::*GET {
     [CmdletBinding(PositionalBinding = $false)]
     param (
-        [Parameter(Position = 0, Mandatory = $true)]
+        [Parameter(Mandatory, Position = 0)]
         [string]
         $Name
     )
-    return (DATASTORE:GET config $Name)
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
+    $PLUGIN = $script:__InvokeBuild::Plugin::Config
+
+    return (DATASTORE:GET _config $Name)
 }
 
-Set-Alias CONF __InvokeBuild::Config::CONF
+Set-Alias CONFIG:GET __InvokeBuild::Plugin::Config::*GET
+Set-Alias CONF __InvokeBuild::Plugin::Config::*GET
