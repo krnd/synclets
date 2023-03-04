@@ -16,7 +16,7 @@ TASK flutter:setup {
 
 TASK flutter:build {
     $Platform = (CONF flutter.platform)
-    flutter run $Platform
+    flutter build -d $Platform --verbose
 }
 
 TASK flutter:run {
