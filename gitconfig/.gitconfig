@@ -2,8 +2,6 @@
     name = {{user.name}}
     email = {{user.email}}
 
-[url "~/Projects/"]
-	insteadOf = prj:
 {{#urls}}
 [url "{{path}}"]
     insteadOf = {{name}}:
