@@ -1,0 +1,10 @@
+{
+  "bucket": "gitattributes",
+  "version": "1.0.0",
+  "location": ".",
+  "parameters": {
+    ".gitattributes": {
+      "lfs?": "bool"
+    }
+  }
+}

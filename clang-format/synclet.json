@@ -1,0 +1,10 @@
+{
+  "bucket": "clang-format",
+  "version": "1.0.0",
+  "location": ".",
+  "parameters": {
+    ".clang-format": {
+      "standard?": "string"
+    }
+  }
+}

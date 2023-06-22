@@ -1,0 +1,5 @@
+{
+  "bucket": "windows-terminal",
+  "version": "1.0.0",
+  "location": "<LOCALAPPDATA>/Packages/Microsoft.WindowsTerminal_*/LocalState"
+}

@@ -1,0 +1,5 @@
+{
+  "bucket": "flake8",
+  "version": "1.0.0",
+  "location": "."
+}

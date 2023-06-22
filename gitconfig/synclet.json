@@ -1,0 +1,15 @@
+{
+  "bucket": "gitconfig",
+  "version": "1.0.0",
+  "location": "<USERPROFILE>",
+  "parameters": {
+    ".gitconfig": {
+      "user.name": "string",
+      "user.email": "string",
+      "urls[]?": {
+        "path": "string",
+        "name": "string"
+      }
+    }
+  }
+}

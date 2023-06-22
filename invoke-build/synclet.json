@@ -1,0 +1,8 @@
+{
+  "bucket": "invoke-build",
+  "version": "1.0.0",
+  "locations": {
+    "": ".invoke",
+    ".build.ps1": "."
+  }
+}
