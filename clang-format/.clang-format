@@ -1,5 +1,5 @@
-# clang-format 15.0.0
-# https://releases.llvm.org/15.0.0/tools/clang/docs/ClangFormatStyleOptions.html
+# clang-format 16.0.0
+# https://releases.llvm.org/16.0.0/tools/clang/docs/ClangFormatStyleOptions.html
 
 Language: Cpp
 {{#standard}}
@@ -10,14 +10,15 @@ Standard: Latest
 {{/standard}}
 BasedOnStyle: Microsoft
 DisableFormat: false
+# LineEnding: ...
 
-IncludeIsMainRegex: null
-IncludeIsMainSourceRegex: null
+IncludeIsMainRegex: ""
+IncludeIsMainSourceRegex: ""
 IncludeCategories:
   - Regex: "^<"
-    Priority: -100
+    Priority: -1
   - Regex: '^"'
-    Priority: 100
+    Priority: 0
 
 MacroBlockBegin: ""
 MacroBlockEnd: ""
@@ -39,7 +40,9 @@ AlignConsecutiveDeclarations: None
 AlignConsecutiveMacros: AcrossEmptyLinesAndComments
 AlignEscapedNewlines: Right
 AlignOperands: DontAlign
-AlignTrailingComments: true
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: Empty
@@ -62,9 +65,9 @@ BraceWrapping:
   AfterEnum: true
   AfterFunction: true
   AfterNamespace: false
-  # lang::begin(objc)
+  # lang:begin(objc)
   AfterObjCDeclaration: true
-  # lang::end(objc)
+  # lang:end(objc)
   AfterStruct: true
   AfterUnion: true
   AfterExternBlock: false
@@ -76,12 +79,15 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
-# lang::begin(java)
+BreakAfterAttributes: Always
+# lang:begin(java)
 BreakAfterJavaFieldAnnotations: true
-# lang::end(java)
+# lang:end(java)
+BreakArrays: false
 BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Custom
 BreakBeforeConceptDeclarations: Always
+BreakBeforeInlineASMColon: OnlyMultiline
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeColon
 BreakInheritanceList: BeforeColon
@@ -109,23 +115,28 @@ IndentRequiresClause: true
 IndentWidth: 4
 IndentWrappedFunctionNames: false
 InsertBraces: true
+InsertNewlineAtEOF: true
 InsertTrailingCommas: Wrapped
-# lang::begin(java)
+IntegerLiteralSeparator:
+  Binary: -1
+  Decimal: -1
+  Hex: -1
+# lang:begin(java)
 JavaImportGroups: null
 JavaScriptQuotes: Double
 JavaScriptWrapImports: true
-# lang::end(java)
+# lang:end(java)
 KeepEmptyLinesAtTheStartOfBlocks: false
 LambdaBodyIndentation: Signature
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
-# lang::begin(objc)
+# lang:begin(objc)
 ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 4
 ObjCBreakBeforeNestedBlockParam: false
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: false
-# lang::end(objc)
+# lang:end(objc)
 PPIndentWidth: 2
 PackConstructorInitializers: Never
 # PenaltyBreakAssignment
@@ -152,7 +163,9 @@ RawStringFormats: null
 ReferenceAlignment: Right
 ReflowComments: true
 RemoveBracesLLVM: false
+RemoveSemicolon: false
 RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: OuterScope
 SeparateDefinitionBlocks: Leave
 ShortNamespaceLines: 0
 SortIncludes: CaseInsensitive
