@@ -1,15 +1,25 @@
-# flake8 6.0.0
+# flake8 6.1.0
 
 [flake8]
-#   http://flake8.pycqa.org/en/latest/user/options.html
-#   http://flake8.pycqa.org/en/latest/user/error-codes.html
+#   http://flake8.pycqa.org/en/6.1.0/user/options.html
+#   http://flake8.pycqa.org/en/6.1.0/user/error-codes.html
 #   https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes
+#   https://pypi.org/project/flake8-bugbear/
+#   https://pypi.org/project/flake8-import-order/
 
 ################################## TOOL ########################################
 
-# Specify the number of subprocesses that Flake8 will use to
-# run checks in parallel.
+# Specify the number of subprocesses that Flake8 will use to run checks in
+# parallel.
 jobs = auto
+
+################################## PLUGINS #####################################
+
+# Require specific plugins to be installed before running.
+require-plugins =
+
+# Enable off-by-default extensions.
+enable-extensions =
 
 ################################## OUTPUT ######################################
 
@@ -20,18 +30,19 @@ quiet = 0
 
 ################### Formatting #############################
 
+# Whether to use color in output.
+color = always
+
 # Select the formatter used to display errors to the user.
 format = default
 
 # Print the total number of errors.
 count = True
 
-# Print the source code generating the error/warning in
-# question.
+# Print the source code generating the error/warning in question.
 show-source = True
 
-# Count the number of occurrences of each error/warning code
-# and print a report.
+# Count the number of occurrences of each error/warning code and print a report.
 statistics = True
 
 ################### Targets ################################
@@ -39,20 +50,17 @@ statistics = True
 # Redirect all output to the specified file.
 output-file = .logs/flake8.log
 
-# Also print output to stdout if output-file has been
-# configured.
+# Also print output to stdout if output-file has been configured.
 tee = True
 
 ################################## FILE PATTERNS ###############################
 
-# Provide a comma-separate list of glob patterns to include
-# for checks.
+# Provide a comma-separate list of glob patterns to include for checks.
 filename =
     # python files
     *.py,
 
-# Provide a comma-separated list of glob patterns to exclude
-# from checks.
+# Provide a comma-separated list of glob patterns to exclude from checks.
 exclude =
     # git folder
     .git,
@@ -63,6 +71,10 @@ exclude =
     # mypy cache
     .mypy_cache,
 
+# Provide a comma-separated list of glob patterns to add to the list of excluded
+# ones.
+# extend-exclude =
+
 ################################## LINTING #####################################
 
 # Set the number of spaces used for indentation.
@@ -70,26 +82,22 @@ indent-size = 2
 
 ################### Environment ############################
 
-# Provide a custom list of builtin functions, objects,
-# names, etc.
+# Provide a custom list of builtin functions, objects, names, etc.
 builtins =
 
 ################### Options ################################
 
-# Report all errors, even if it is on the same line as a
-# `# NOQA` comment.
+# Report all errors, even if it is on the same line as a '# NOQA' comment.
 disable-noqa = False
 
-# Set the maximum length that any line (with some
-# exceptions) may be.
+# Set the maximum length that any line (with some exceptions) may be.
 max-line-length = 79
 
-# Set the maximum allowed McCabe complexity value for a
-# block of code.
+# Set the maximum allowed McCabe complexity value for a block of code.
 max-complexity = 10
 
-# Toggle whether pycodestyle should enforce matching the
-# indentation of the opening bracket's line.
+# Toggle whether pycodestyle should enforce matching the indentation of the
+# opening bracket's line.
 # (effects E131, E133)
 hang-closing = True
 
@@ -103,10 +111,12 @@ select =
     B, B9,  # flake8-bugbear
     # I,    # flake8-import-order (conflicts with isort)
 
+# Specify a list of codes to add to the list of selected ones.
+# extend-select =
+
 # Specify a list of codes to ignore.
 ignore =
-    # - [E126] continuation line over-indented for hanging
-    #   indent
+    # - [E126] continuation line over-indented for hanging indent
     #   (conflicts with black)
     E126,
     # - [E133] closing bracket is missing indentation
@@ -124,15 +134,23 @@ ignore =
     W503, W505
     # - [B902] Invalid first argument used for method.
     #   (conflicts with pylance:reportSelfClsParameterName)
+    B009, B010,
+    # - [B009] Do not call `getattr(x, 'attr')`, instead use normal property
+    #   access: `x.attr`.
+    # - [B010] Do not call `setattr(x, 'attr')`, instead use normal property
+    #   access: `x.attr = val`.
     B902,
-    # - [B950] B950: Line too long.
+    # - [B907]  Consider replacing `f"'{foo}'"` with `f"{foo!r}"` which is both
+    #   easier to read and will escape quotes inside foo if that would appear.
+    B907,
+    # - [B950] Line too long.
     # B950,
 
-# Enable off-by-default extensions.
-enable-extensions =
+# Specify a list of codes to add to the list of ignored ones.
+# extend-ignore =
 
-# Specify a list of mappings of files and the codes that
-# should be ignored for the entirety of the file.
+# Specify a list of mappings of files and the codes that should be ignored for
+# the entirety of the file.
 per-file-ignores =
     # - [E301] expected 1 blank line, found 0
     # - [E302] expected 2 blank lines, found 0
@@ -150,14 +168,5 @@ per-file-ignores =
 # Enable PyFlakes syntax checking of doctests in docstrings.
 doctests = True
 
-# Specify which files are checked by PyFlakes for doctest
-# syntax.
-include-in-doctest =
-
-# Specify which files are not to be checked by PyFlakes for
-# doctest syntax.
-exclude-from-doctest =
-
-# Set the maximum length that a comment or docstring line
-# may be.
+# Set the maximum length that a comment or docstring line may be.
 max-doc-length = 79
