@@ -45,14 +45,13 @@ $Paths | ForEach-Object {
         $RelativePath = $RelativePath.Substring(2)
     }
 
-    Write-Host -NoNewline "Taking ownership of '$RelativePath' ... "
-    TAKEOWN /F "$($_.FullName)" 2>&1> $null
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "FAILED"
-        Write-Error "Failed to take ownership of '$($_.FullName)'."
-    } else {
+    Write-Host -NoNewline "Unblocking '$RelativePath' ... "
+    try {
+        Unblock-File "$($_.FullName)"
         Write-Host "OK"
+    } catch {
+        Write-Host "FAILED"
+        Write-Error "Failed to unblock '$($_.FullName)'."
     }
 
 }
