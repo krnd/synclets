@@ -11,10 +11,8 @@ CONFIGURE python.venv.path `
 
 CONFIGURE python.venv.requirements `
     -Default "requirements.txt"
-
-CONFIGURE python.venv.compilants `
-    -Default @()
-
+CONFIGURE python.venv.configuration `
+    -Default "develop"
 
 
 # ################################ SHORTHANDS ##################################
@@ -53,24 +51,42 @@ TASK python:venv:setup python:venv:deactivate, {
     EXEC { pip install pip-tools }
 }, python:venv:compile, {
     $Requirements = (CONF python.venv.requirements)
-        if (Test-Path $Requirements -PathType Leaf) {
+    if ($Requirements -is [PSCustomObject]) {
+        $Configuration = (CONF python.venv.configuration)
+        $Requirements = $Requirements.$Configuration
+    } elseif ($Requirements -is [array]) {
+        $Compilants += $Requirements[0]
+    }
+
+    if (Test-Path $Requirements -PathType Leaf) {
         EXEC {
             pip-sync $Requirements `
                 --quiet `
                 --force
         }
     }
+
     EXEC { pip install pip-tools }
 }
 
 TASK python:venv:compile python:venv:activate, {
-    $Compilants = (CONF python.venv.compilants)
-        $Compilants += @((CONF python.venv.requirements))
+    $Compilants = @()
+
+    $Requirements = (CONF python.venv.requirements)
+    if ($Requirements -is [PSCustomObject]) {
+        foreach ($Item in $Requirements.PSObject.Properties ) {
+            $Compilants += $Item.Value
+        }
+    } else {
+        $Compilants += $Requirements
+    }
+
     $Compilants | ForEach-Object {
         $File = [IO.Path]::ChangeExtension($_, "in")
         if (Test-Path $File -PathType Leaf) {
             EXEC {
                 pip-compile $File `
+                    --strip-extras `
                     --quiet
             }
         }
