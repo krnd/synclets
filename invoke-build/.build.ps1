@@ -4,9 +4,10 @@
 # ################################ VARIABLES ###################################
 
 $script:__InvokeBuild = @{
-    Plugin = @{}
-    Setup  = @()
-    Paths  = @(
+    Plugin    = @{}
+    Setup     = @()
+    LateSetup = @()
+    Paths     = @(
         ".",
         ".invoke",
         ".invokebuild",
@@ -25,6 +26,9 @@ function __InvokeBuild::*SETUP {
         [Parameter(Mandatory, Position = 0, ParameterSetName = "script")]
         [scriptblock]
         $Script,
+        [Parameter(ParameterSetName = "script")]
+        [switch]
+        $Late,
         [Parameter(Mandatory, ParameterSetName = "execute")]
         [switch]
         $ExecuteAll
@@ -33,12 +37,17 @@ function __InvokeBuild::*SETUP {
     $INVOKE = $script:__InvokeBuild
 
     if ($ExecuteAll) {
-        foreach ($Script in $INVOKE::Setup) {
+        foreach ($Script in ($INVOKE::Setup + $INVOKE::LateSetup)) {
             & $Script
         }
         $INVOKE::Setup = @()
+        $INVOKE::LateSetup = @()
     } else {
-        $INVOKE::Setup += $Script
+        if ($Late) {
+            $INVOKE::LateSetup += $Script
+        } else {
+            $INVOKE::Setup += $Script
+        }
     }
 }
 
