@@ -54,6 +54,7 @@ TASK python:venv:setup python:venv:deactivate, {
     if ($Requirements -is [PSCustomObject]) {
         $Configuration = (CONF python.venv.configuration)
         $Target = $Requirements.$Configuration
+
     } else {
         $Target = if ($Requirements -is [array]) {
             $Requirements[0]
@@ -62,7 +63,7 @@ TASK python:venv:setup python:venv:deactivate, {
         }
     }
 
-    $Target = [IO.Path]::ChangeExtension($_.Key, "txt")
+    $Target = [IO.Path]::ChangeExtension($Target, "txt")
     if (Test-Path $Target -PathType Leaf) {
         EXEC {
             pip-sync $Target `
