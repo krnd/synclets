@@ -53,8 +53,11 @@ TASK python:venv:setup python:venv:deactivate, {
     $Requirements = (CONF python.venv.requirements)
     if ($Requirements -is [PSCustomObject]) {
         $Configuration = (CONF python.venv.configuration)
-        $Target = $Requirements.$Configuration
-
+        $Target = if ($Requirements.$Configuration -is [array]) {
+            $Requirements.$Configuration[0]
+        } else {
+            $Requirements.$Configuration
+        }
     } else {
         $Target = if ($Requirements -is [array]) {
             $Requirements[0]
