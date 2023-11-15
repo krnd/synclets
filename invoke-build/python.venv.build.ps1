@@ -53,14 +53,19 @@ TASK python:venv:setup python:venv:deactivate, {
     $Requirements = (CONF python.venv.requirements)
     if ($Requirements -is [PSCustomObject]) {
         $Configuration = (CONF python.venv.configuration)
-        $Requirements = $Requirements.$Configuration
-    } elseif ($Requirements -is [array]) {
-        $Compilants += $Requirements[0]
+        $Target = $Requirements.$Configuration
+    } else {
+        $Target = if ($Requirements -is [array]) {
+            $Requirements[0]
+        } else {
+            $Requirements
+        }
     }
 
-    if (Test-Path $Requirements -PathType Leaf) {
+    $Target = [IO.Path]::ChangeExtension($_.Key, "txt")
+    if (Test-Path $Target -PathType Leaf) {
         EXEC {
-            pip-sync $Requirements `
+            pip-sync $Target `
                 --quiet `
                 --force
         }
@@ -70,25 +75,34 @@ TASK python:venv:setup python:venv:deactivate, {
 }
 
 TASK python:venv:compile python:venv:activate, {
-    $Compilants = @()
+    $Compilants = @{}
 
     $Requirements = (CONF python.venv.requirements)
     if ($Requirements -is [PSCustomObject]) {
-        foreach ($Item in $Requirements.PSObject.Properties ) {
-            $Compilants += $Item.Value
+        foreach ($Item in $Requirements.PSObject.Properties) {
+            $Target = if ($Item.Value -is [array]) {
+                $Item.Value[0]
+            } else {
+                $Item.Value
+            }
+            $Compilants[$Target] = @($Item.Value)
         }
     } else {
-        $Compilants += $Requirements
+        $Target = if ($Requirements -is [array]) {
+            $Requirements[0]
+        } else {
+            $Requirements
+        }
+        $Compilants[$Target] = @($Requirements)
     }
 
-    $Compilants | ForEach-Object {
-        $File = [IO.Path]::ChangeExtension($_, "in")
-        if (Test-Path $File -PathType Leaf) {
-            EXEC {
-                pip-compile $File `
-                    --strip-extras `
-                    --quiet
-            }
+    $Compilants.GetEnumerator() | ForEach-Object {
+        $Target = [IO.Path]::ChangeExtension($_.Key, "txt")
+        EXEC {
+            pip-compile $_.Value `
+                --output-file $Target `
+                --strip-extras `
+                --quiet
         }
     }
 }
