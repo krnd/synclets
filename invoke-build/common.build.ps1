@@ -28,7 +28,7 @@ function __InvokeBuild::IsTaskMissing {
 
 # ###################### Defaults ##########################
 
-INVOKEBUILD:SETUP {
+INVOKEBUILD:SETUP -Late {
     if (__InvokeBuild::IsTaskMissing ".") {
         TASK .
     }
