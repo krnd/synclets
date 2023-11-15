@@ -3,6 +3,9 @@
 
 # ################################ CONFIGURATION ###############################
 
+CONFIGURE python.venv.shorthands `
+    -Default $true
+
 CONFIGURE python.venv.path `
     -Default ".venv"
 
@@ -11,6 +14,18 @@ CONFIGURE python.venv.requirements `
 
 CONFIGURE python.venv.compilants `
     -Default @()
+
+
+
+# ################################ SHORTHANDS ##################################
+
+INVOKEBUILD:SETUP {
+    if (CONF python.venv.shorthands) {
+        if (__InvokeBuild::IsTaskMissing "..") {
+            TASK .. python:venv:activate
+        }
+    }
+}
 
 
 # ################################ TASKS #######################################
@@ -38,7 +53,7 @@ TASK python:venv:setup python:venv:deactivate, {
     EXEC { pip install pip-tools }
 }, python:venv:compile, {
     $Requirements = (CONF python.venv.requirements)
-    if (Test-Path $Requirements -PathType Leaf) {
+        if (Test-Path $Requirements -PathType Leaf) {
         EXEC {
             pip-sync $Requirements `
                 --quiet `
@@ -50,7 +65,7 @@ TASK python:venv:setup python:venv:deactivate, {
 
 TASK python:venv:compile python:venv:activate, {
     $Compilants = (CONF python.venv.compilants)
-    $Compilants += @((CONF python.venv.requirements))
+        $Compilants += @((CONF python.venv.requirements))
     $Compilants | ForEach-Object {
         $File = [IO.Path]::ChangeExtension($_, "in")
         if (Test-Path $File -PathType Leaf) {
