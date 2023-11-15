@@ -19,7 +19,8 @@ TASK python:hatch:install python:venv:activate, {
     $Wheel = "$(hatch project metadata name)-$(hatch version)-py2.py3-none-any.whl"
     EXEC {
         pip install `
-            --no-cache-dir (Join-Path (CONF python.hatch.output) $Wheel) `
+        (Join-Path (CONF python.hatch.output) $Wheel) `
+            --no-cache-dir `
             --force
     }
 }
@@ -27,6 +28,8 @@ TASK python:hatch:install python:venv:activate, {
 TASK python:hatch:uninstall python:venv:activate, {
     $Package = "$(hatch project metadata name)"
     EXEC {
-        pip uninstall $Package
+        pip uninstall `
+            $Package `
+            --yes
     }
 }
