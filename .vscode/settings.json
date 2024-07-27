@@ -1,10 +1,9 @@
 {
-    //=======| Code Spell Checker (streetsidesoftware.code-spell-checker)
-    "cSpell.dictionaryDefinitions": [],
-    "cSpell.dictionaries": [],
-    "cSpell.words": [],
+    //===========================< Text Editor >================================
+    //=======| Formatting
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+    "editor.formatOnPaste": false,
     //==========================================================================
-    "cSpell.enabled": false,
-    "powershell.startAutomatically": false,
     "<placeholder>": null,
 }
