@@ -41,10 +41,32 @@ INVOKEBUILD:SETUP {
         }
     }
 
+    $INVOKE::ConfigFile = $null
+    $INVOKE::LocalConfigFile = $null
+
     if ($FilePath) {
+        $File = (Get-Item $FilePath)
+        $INVOKE::ConfigFile = $File
+
         CONFIG:LOAD `
-            -File $FilePath `
+            -File $File.FullName `
             -Immediate
+
+        $LocalFileName = -join @(
+            $File.BaseName,
+            ".local",
+            $File.Extension
+        )
+
+        $LocalFilePath = (Join-Path $File.Directory $LocalFileName)
+        if (Test-Path $LocalFilePath -PathType Leaf) {
+            $LocalFile = (Get-Item $LocalFilePath)
+            $INVOKE::LocalConfigFile = $LocalFile
+
+            CONFIG:LOAD `
+                -File $LocalFile.FullName `
+                -Immediate
+        }
     }
 }
 
