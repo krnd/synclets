@@ -27,10 +27,9 @@
     lg = log --format=compactlog --max-count=5
     last = log -1 HEAD --stat
     # pull
-    pl = pull
+    #
     # push
-    p = push
-    done = push origin HEAD
+    #
     # reset
     undo = reset --mixed HEAD~1
     discard = !git reset --hard && git clean -d --force
@@ -43,6 +42,9 @@
     sm-pull = submodule foreach 'git pull'
     sms = sm-status
     smu = sm-update
+    # compound aliases
+    sync = !git pull && git push
+    ppx = !git reset --hard && git pull && git push
 
 [core]
     autocrlf = true
