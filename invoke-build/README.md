@@ -15,6 +15,9 @@
 
 ## Plugins
 
+#### [argument](argument.plugin.ps1)
+*To be documented.*
+
 #### [config](config.plugin.ps1)
 *To be documented.*
 

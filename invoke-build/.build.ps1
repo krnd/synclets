@@ -1,15 +1,28 @@
 #Requires -Version 5.1
 
 
+# ################################ ARGUMENTS ###################################
+[CmdletBinding()]
+param (
+    [Parameter(ValueFromRemainingArguments)]
+    [string[]]
+    $InvokeBuildRemainingArguments
+)
+
+
 # ################################ VARIABLES ###################################
 
 $script:__InvokeBuild = @{
-    Project   = @{}
+    # Buckets
     Plugin    = @{}
     Builder   = @{}
     Helper    = @{}
+    Project   = @{}
+    # Setup
     Setup     = @()
     LateSetup = @()
+    # Globals
+    Arguments = $InvokeBuildRemainingArguments
     Paths     = @(
         ".",
         ".invoke",
