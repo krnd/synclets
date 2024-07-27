@@ -1,18 +1,30 @@
 #Requires -Version 5.1
 
 
+# ################################ VARIABLES ###################################
+
+$script:__InvokeBuild::Builder["python.venv"] = @{
+    LockfileExtension = @{
+        ".in"  = ".txt"
+        ".pip" = ".lock"
+    }
+}
+
+
 # ################################ CONFIGURATION ###############################
 
 CONFIGURE python.venv.shorthands `
     -Default $true
 
+CONFIGURE python.venv.version `
+    -Default "default"
 CONFIGURE python.venv.path `
     -Default ".venv"
 
 CONFIGURE python.venv.requirements `
     -Default "requirements.txt"
-CONFIGURE python.venv.configuration `
-    -Default "develop"
+CONFIGURE python.venv.compilants `
+    -Default @()
 
 
 # ################################ SHORTHANDS ##################################
@@ -41,71 +53,107 @@ TASK python:venv:deactivate {
     try { deactivate } catch {}
 }
 
-TASK python:venv:setup python:venv:deactivate, {
+TASK python:venv:setup `
+    python:venv:create, `
+    python:venv:install
+
+TASK python:venv:create python:venv:deactivate, {
+    $Version = (CONF python.venv.version)
     $Environment = (CONF python.venv.path)
     if (-not (Test-Path $Environment -PathType Container)) {
-        EXEC { py -m venv $Environment }
+        if ($Version -and ($Version -ne "default")) {
+            EXEC { py -$Version -m venv $Environment }
+        } else {
+            EXEC { py -m venv $Environment }
+        }
     }
 }, python:venv:activate, {
-    EXEC { python -m pip install --upgrade pip }
-    EXEC { pip install pip-tools }
-}, python:venv:compile, {
-    $Requirements = (CONF python.venv.requirements)
-    if ($Requirements -is [PSCustomObject]) {
-        $Configuration = (CONF python.venv.configuration)
-        $Target = if ($Requirements.$Configuration -is [array]) {
-            $Requirements.$Configuration[0]
-        } else {
-            $Requirements.$Configuration
-        }
-    } else {
-        $Target = if ($Requirements -is [array]) {
-            $Requirements[0]
-        } else {
-            $Requirements
-        }
+    EXEC {
+        python `
+            -m pip install pip `
+            --upgrade `
+            --quiet
     }
-
-    $Target = [IO.Path]::ChangeExtension($Target, "txt")
-    if (Test-Path $Target -PathType Leaf) {
-        EXEC {
-            pip-sync $Target `
-                --quiet `
-                --force
-        }
+    EXEC {
+        python `
+            -m pip install pip-tools `
+            --upgrade `
+            --quiet
     }
-
-    EXEC { pip install pip-tools }
 }
 
 TASK python:venv:compile python:venv:activate, {
-    $Compilants = @{}
+    $INVOKE = $script:__InvokeBuild
+    $BUILDER = $INVOKE::Builder["python.venv"]
+
+    $Compilants = (CONF python.venv.compilants)
 
     $Requirements = (CONF python.venv.requirements)
-    if ($Requirements -is [PSCustomObject]) {
-        foreach ($Item in $Requirements.PSObject.Properties) {
-            $Target = if ($Item.Value -is [array]) {
-                $Item.Value[0]
-            } else {
-                $Item.Value
-            }
-            $Compilants[$Target] = @($Item.Value)
+    $Extension = [IO.Path]::GetExtension($Requirements)
+    foreach ($Item in $BUILDER.LockfileExtension.GetEnumerator()) {
+        if ($Item.Value -eq $Extension) {
+            $Requirements = [IO.Path]::ChangeExtension(
+                $Requirements,
+                $Item.Name)
+            $Extension = $null
         }
-    } else {
-        $Target = if ($Requirements -is [array]) {
-            $Requirements[0]
-        } else {
-            $Requirements
-        }
-        $Compilants[$Target] = @($Requirements)
+    }
+    if ($null -ne $Extension) {
+        # Unable to revert extension of requirements file.
+    } elseif (Test-Path $Requirements -PathType Leaf) {
+        $Compilants += $Requirements
     }
 
-    $Compilants.GetEnumerator() | ForEach-Object {
-        $Target = [IO.Path]::ChangeExtension($_.Key, "txt")
+    $Compilants | ForEach-Object {
+        $File = (Get-Item $_)
+        $Lockfile = [IO.Path]::ChangeExtension(
+            $File.FullName,
+            $BUILDER.LockfileExtension[$File.Extension])
         EXEC {
-            pip-compile $_.Value `
-                --output-file $Target `
+            pip-compile $File.FullName `
+                --output-file $Lockfile `
                 --strip-extras `
+                --no-header `
+                --no-annotate `
+                --quiet
+        }
+    }
+}
+
+TASK python:venv:install python:venv:activate, {
+    $Requirements = (CONF python.venv.requirements)
+    if (Test-Path $Requirements -PathType Leaf) {
+        EXEC {
+            pip install `
+                --requirement $Requirements `
+                --quiet
+        }
+    }
+}
+
+TASK python:venv:reinstall python:venv:activate, {
+    EXEC {
+        python `
+            -m pip install pip `
+            --force-reinstall `
+            --upgrade `
+            --quiet
+    }
+    EXEC {
+        python `
+            -m pip install pip-tools `
+            --force-reinstall `
+            --upgrade `
+            --quiet
+    }
+}, {
+    $Requirements = (CONF python.venv.requirements)
+    if (Test-Path $Requirements -PathType Leaf) {
+        EXEC {
+            pip install `
+                --requirement $Requirements `
+                --force-reinstall `
+                --upgrade `
                 --quiet
         }
     }
