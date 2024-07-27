@@ -13,7 +13,6 @@ $script:__InvokeBuild::Plugin::Config = @{
     )
     FileNames = @(
         "invoke.json",
-        "build.json",
         "invokebuild.json",
         "invoke-build.json"
     )
