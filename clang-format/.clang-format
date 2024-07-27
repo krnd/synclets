@@ -1,5 +1,5 @@
-# clang-format 16.0.0
-# https://releases.llvm.org/16.0.0/tools/clang/docs/ClangFormatStyleOptions.html
+# clang-format 17.0.1
+# https://releases.llvm.org/17.0.1/tools/clang/docs/ClangFormatStyleOptions.html
 
 Language: Cpp
 {{#standard}}
@@ -9,17 +9,16 @@ Standard: {{standard}}
 Standard: Latest
 {{/standard}}
 BasedOnStyle: Microsoft
+LineEnding: DeriveCRLF
 DisableFormat: false
-# LineEnding: ...
 
 IncludeIsMainRegex: ""
 IncludeIsMainSourceRegex: ""
 IncludeCategories:
   - Regex: "^<"
-    Priority: -1
-  - Regex: '^"'
-    Priority: 0
+    Priority: -100
 
+Macros: []
 MacroBlockBegin: ""
 MacroBlockEnd: ""
 AttributeMacros: []
@@ -31,6 +30,8 @@ StatementMacros: []
 TypenameMacros: []
 WhitespaceSensitiveMacros: []
 
+TypeNames: []
+
 AccessModifierOffset: -2
 AlignAfterOpenBracket: AlwaysBreak
 AlignArrayOfStructures: Right
@@ -38,6 +39,11 @@ AlignConsecutiveAssignments: Consecutive
 AlignConsecutiveBitFields: AcrossEmptyLinesAndComments
 AlignConsecutiveDeclarations: None
 AlignConsecutiveMacros: AcrossEmptyLinesAndComments
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseColons: false
 AlignEscapedNewlines: Right
 AlignOperands: DontAlign
 AlignTrailingComments:
@@ -79,6 +85,7 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
+BracedInitializerIndentWidth: 4
 BreakAfterAttributes: Always
 # lang:begin(java)
 BreakAfterJavaFieldAnnotations: true
@@ -98,7 +105,6 @@ CompactNamespaces: false
 ConstructorInitializerIndentWidth: 8
 ContinuationIndentWidth: 4
 Cpp11BracedListStyle: true
-DeriveLineEnding: true
 DerivePointerAlignment: false
 EmptyLineAfterAccessModifier: Always
 EmptyLineBeforeAccessModifier: Always
@@ -126,6 +132,7 @@ JavaImportGroups: null
 JavaScriptQuotes: Double
 JavaScriptWrapImports: true
 # lang:end(java)
+KeepEmptyLinesAtEOF: false
 KeepEmptyLinesAtTheStartOfBlocks: false
 LambdaBodyIndentation: Signature
 MaxEmptyLinesToKeep: 2
@@ -163,6 +170,7 @@ RawStringFormats: null
 ReferenceAlignment: Right
 ReflowComments: true
 RemoveBracesLLVM: false
+RemoveParentheses: Leave
 RemoveSemicolon: false
 RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope
@@ -180,6 +188,9 @@ SpaceBeforeCaseColon: false
 SpaceBeforeCpp11BracedList: false
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
+# lang:begin(json)
+SpaceBeforeJsonColon: false
+# lang:end(json)
 SpaceBeforeParens: Custom
 SpaceBeforeParensOptions:
   AfterControlStatements: true
@@ -194,17 +205,21 @@ SpaceBeforeParensOptions:
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: true
-SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 2
 SpacesInAngles: Never
-SpacesInCStyleCastParentheses: false
-SpacesInConditionalStatement: false
 SpacesInContainerLiterals: false
 SpacesInLineCommentPrefix:
   Minimum: 1
   Maximum: 1
-SpacesInParentheses: false
+SpacesInParens: Never
+SpacesInParensOptions:
+  InConditionalStatements: false
+  InCStyleCasts: false
+  InEmptyParentheses: false
+  Other: false
 SpacesInSquareBrackets: false
 TabWidth: 4
-UseCRLF: false
 UseTab: false
+# lang:begin(verilog)
+VerilogBreakBetweenInstancePorts: true
+# lang:end(verilog)
