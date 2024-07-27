@@ -4,7 +4,10 @@
 # ################################ VARIABLES ###################################
 
 $script:__InvokeBuild = @{
+    Project   = @{}
     Plugin    = @{}
+    Builder   = @{}
+    Helper    = @{}
     Setup     = @()
     LateSetup = @()
     Paths     = @(
@@ -35,7 +38,6 @@ function __InvokeBuild::*SETUP {
 
     )
     $INVOKE = $script:__InvokeBuild
-
     if ($ExecuteAll) {
         foreach ($Script in ($INVOKE::Setup + $INVOKE::LateSetup)) {
             & $Script
@@ -86,7 +88,7 @@ foreach ($SearchPath in $script:__InvokeBuild::Paths) {
 INVOKEBUILD:SETUP -ExecuteAll
 
 
-# ################################ BUILDSCRIPTS ################################
+# ################################ BUILDERS ####################################
 
 foreach ($SearchPath in $script:__InvokeBuild::Paths) {
     if (Test-Path $SearchPath -PathType Container) {
