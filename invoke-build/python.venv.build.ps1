@@ -111,6 +111,6 @@ TASK python:venv:compile python:venv:activate, {
     }
 }
 
-TASK python:venv:clean python:venv:deactivate, {
+TASK python:venv:purge python:venv:deactivate, {
     REMOVE (CONF python.venv.path)
 }
