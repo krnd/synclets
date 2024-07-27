@@ -34,3 +34,7 @@ TASK flutter:run {
 TASK flutter:clean {
     EXEC { flutter clean }
 }
+
+TASK flutter:purge {
+    EXEC { flutter clean }
+}
