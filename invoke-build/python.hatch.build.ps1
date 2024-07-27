@@ -42,3 +42,14 @@ TASK python:hatch:uninstall python:venv:activate, {
             --yes
     }
 }
+
+TASK python:hatch:clean python:venv:activate, {
+    EXEC {
+        hatch clean `
+            --taget sdist
+    }
+}
+
+TASK python:hatch:purge python:venv:activate, {
+    EXEC { hatch clean }
+}
