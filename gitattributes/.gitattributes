@@ -85,6 +85,9 @@
 *.dll filter=lfs diff=lfs merge=lfs -text
 *.exe filter=lfs diff=lfs merge=lfs -text
 
+# Python
+*.whl filter=lfs diff=lfs merge=lfs -text
+
 {{/lfs}}
 {{^lfs}}
 
@@ -159,5 +162,8 @@
 # Windows
 *.dll binary
 *.exe binary
+
+# Python
+*.whl binary
 
 {{/lfs}}
