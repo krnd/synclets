@@ -19,9 +19,8 @@
     # cherry-pick
     pick = cherry-pick
     # commit
-    c = commmit
     cm = commit -m
-    caa = commit --all --amend --no-edit
+    amend = commit --amend --no-edit
     # diff
     dfc = diff --cached
     # log
