@@ -1,11 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-  "version": 1,
-  "console_title_template": "{{ .Shell }} in {{ .Folder }}",
-  "Output": "",
+  "version": 2,
   "final_space": true,
-  "osc99": true,
-  "transient_prompt": {
+  "secondary_prompt": {
+    "foreground": "#E6E6E6",
     "template": "\u276f "
   },
   "blocks": [
@@ -17,45 +15,54 @@
         {
           "type": "session",
           "style": "powerline",
-          "powerline_symbol": "\ue0bc",
-          "foreground": "#E6E6E6",
           "background": "#68217A",
+          "foreground": "#E6E6E6",
+          "powerline_symbol": "\ue0bc",
+          "template": " {{ if .SSHSession }}\uf817{{ end }}{{ .UserName }} ",
           "properties": {
             "display_host": false,
-            "display_user": true,
-            "template": " {{ if .SSHSession }}\uf817{{ end }}{{ .UserName }} "
+            "display_user": true
           }
         },
         {
           "type": "path",
           "style": "powerline",
-          "powerline_symbol": "\ue0bc",
-          "foreground": "#E6E6E6",
           "background": "#007ACC",
+          "foreground": "#E6E6E6",
+          "powerline_symbol": "\ue0bc",
+          "template": " {{ .Path }} ",
           "properties": {
-            "folder_separator_icon": " \ue0bb ",
-            "mapped_locations": {},
-            "max_depth": 3,
             "style": "agnoster_short",
-            "template": " {{ .Path }} "
+            "folder_separator_icon": " \ue0bb ",
+            "max_depth": 3,
+            "mapped_locations": {
+              "~/Projects": "\uf0b1"
+            }
           }
         },
         {
           "type": "git",
           "style": "powerline",
-          "powerline_symbol": "\ue0bc",
           "foreground": "#1A1A1A",
+          "background": "#333333",
           "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}#E29031{{ end }}",
+            "{{ if (or .Working.Changed .Staging.Changed) }}#E29031{{ end }}",
             "{{ if (gt .Behind 0) }}#E45454{{ end }}",
             "{{ if (eq .Behind 0) }}#0A703E{{ end }}"
           ],
+          "powerline_symbol": "\ue0bc",
+          "templates": [
+            " {{ .UpstreamIcon }}{{ .BranchStatus }} ",
+            "{{ if .Working.Changed }}\uf044 {{ .Working.String }} {{ end }}",
+            "{{ if (and .Working.Changed .Staging.Changed) }}| {{ end }}",
+            "{{ if .Staging.Changed }}\uf046 {{ .Staging.String }} {{ end }}",
+            "{{ if (gt .StashCount 0) }}| \ueb4b {{ .StashCount }} {{ end }}"
+          ],
           "properties": {
-            "fetch_stash_count": true,
             "fetch_status": true,
             "fetch_upstream_icon": true,
             "fetch_worktree_count": true,
-            "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \uf692 {{ .StashCount }}{{ end }} "
+            "fetch_stash_count": true
           }
         }
       ]
@@ -67,17 +74,21 @@
         {
           "type": "python",
           "style": "diamond",
+          "background": "#333333",
+          "foreground": "#666666",
+          "foreground_templates": [
+            "{{ if .Error }}#B22222{{ end }}",
+            "{{ if .Full }}#E6E6E6{{ end }}"
+          ],
           "leading_diamond": "\ue0ba",
           "trailing_diamond": "\ue0bc",
-          "foreground": "#E6E6E6",
-          "background": "#333333",
+          "template": " \ue235{{ if .Error }} {{ .Error }}{{ end }} ",
           "properties": {
             "display_default": true,
             "display_error": true,
             "display_mode": "context",
             "fetch_version": true,
-            "fetch_virtual_env": true,
-            "template": " {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }} \ue0bb py "
+            "fetch_virtual_env": true
           }
         }
       ]
@@ -91,9 +102,7 @@
           "type": "text",
           "style": "plain",
           "foreground": "#E6E6E6",
-          "properties": {
-            "template": "\u276f"
-          }
+          "template": "\u276f"
         }
       ]
     },
@@ -104,14 +113,11 @@
         {
           "type": "root",
           "style": "diamond",
-          "trailing_diamond": "\ue0bc",
-          "leading_diamond": "\ue0ba",
-          "foreground": "#E6E6E6",
           "background": "#E45454",
-          "properties": {
-            "root_icon": "ROOT",
-            "template": " \uf0e7 "
-          }
+          "foreground": "#E6E6E6",
+          "leading_diamond": "\ue0ba",
+          "trailing_diamond": "\ue0bc",
+          "template": " \uf0e7 "
         }
       ]
     }
