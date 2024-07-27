@@ -24,7 +24,7 @@ $script:__InvokeBuild::Plugin::Config = @{
 
 INVOKEBUILD:SETUP {
     $INVOKE = $script:__InvokeBuild
-    $PLUGIN = $script:__InvokeBuild::Plugin::Config
+    $PLUGIN = $INVOKE::Plugin::Config
 
     $FilePath = $null
     foreach ($SearchPath in ($INVOKE::Paths + $PLUGIN::Paths)) {
@@ -88,7 +88,8 @@ function __InvokeBuild::Plugin::Config::Load {
         [string]
         $File
     )
-    $PLUGIN = $script:__InvokeBuild::Plugin::Config
+    $INVOKE = $script:__InvokeBuild
+    $PLUGIN = $INVOKE::Plugin::Config
     $STORAGE = $PLUGIN::Storage
 
     switch ($Source) {
@@ -121,9 +122,6 @@ function __InvokeBuild::Plugin::Config::*LOAD {
         [switch]
         $Immediate
     )
-    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
-    $PLUGIN = $script:__InvokeBuild::Plugin::Config
-
     $ParameterSetName = $PSCmdlet.ParameterSetName
     if ($Immediate) {
         __InvokeBuild::Plugin::Config::Load `
@@ -154,7 +152,8 @@ function __InvokeBuild::Plugin::Config::*VALUE {
         [object]
         $Default
     )
-    $PLUGIN = $script:__InvokeBuild::Plugin::Config
+    $INVOKE = $script:__InvokeBuild
+    $PLUGIN = $INVOKE::Plugin::Config
     $STORAGE = $PLUGIN::Storage
 
     if (-not $STORAGE.ContainsKey($Name)) {
@@ -174,7 +173,8 @@ function __InvokeBuild::Plugin::Config::*GET {
         [string]
         $Name
     )
-    $PLUGIN = $script:__InvokeBuild::Plugin::Config
+    $INVOKE = $script:__InvokeBuild
+    $PLUGIN = $INVOKE::Plugin::Config
     $STORAGE = $PLUGIN::Storage
 
     if (-not $STORAGE.ContainsKey($Name)) {
