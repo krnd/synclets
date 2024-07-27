@@ -31,6 +31,8 @@ CONFIGURE python.cog.presetmode `
 # ################################ TASKS #######################################
 
 TASK python:cog:run python:venv:activate, {
+    $INVOKE = $script:__InvokeBuild
+
     $Verbosity = `
         if (CONF python.cog.quiet) { 0 } `
         elseif (CONF python.cog.verbose) { 2 } `
@@ -49,7 +51,7 @@ TASK python:cog:run python:venv:activate, {
         }
         $PrefixedPrologue = @(
             "import __cog__",
-            "__cog__.install(globals(), '.config/invoke.json')"
+            "__cog__.install(globals(), r'$($INVOKE::ConfigFile)')"
         ) -join ";"
         $Prologue = if ($Prologue) {
             $PrefixedPrologue + ";" + $Prologue
