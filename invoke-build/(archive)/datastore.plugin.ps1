@@ -20,10 +20,10 @@ function __InvokeBuild::Plugin::DataStore::*MAKE {
         $Name,
         [Parameter()]
         [string]
-        $File = $null,
+        $File,
         [Parameter()]
         [hashtable]
-        $Values = $null
+        $Values
     )
     $PLUGIN = $script:__InvokeBuild::Plugin::DataStore
 
@@ -33,14 +33,14 @@ function __InvokeBuild::Plugin::DataStore::*MAKE {
     }
     $DataStore = @{}
 
-    if ($File) {
+    if (-not $File) {
         $Json = (Get-Content $File -Raw | ConvertFrom-Json)
         $Json.PSObject.Properties | ForEach-Object {
             $DataStore[$_.Name] = $_.Value
         }
     }
 
-    if ($Values) {
+    if ($null -ne $Values) {
         foreach ($Key in $Values.Keys) {
             $DataStore[$Key] = $Values[$Key]
         }
@@ -125,7 +125,7 @@ function __InvokeBuild::Plugin::DataStore::*GET {
         $Name,
         [Parameter()]
         [object]
-        $Default = $null
+        $Default
     )
     $PLUGIN = $script:__InvokeBuild::Plugin::DataStore
 

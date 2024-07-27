@@ -35,7 +35,7 @@ INVOKEBUILD:SETUP {
                 $FilePath = $null
             }
         }
-        if ($FilePath) {
+        if ($null -ne $FilePath) {
             break
         }
     }
@@ -43,7 +43,7 @@ INVOKEBUILD:SETUP {
     $INVOKE::ConfigFile = $null
     $INVOKE::LocalConfigFile = $null
 
-    if ($FilePath) {
+    if ($null -ne $FilePath) {
         $File = (Get-Item $FilePath)
         $INVOKE::ConfigFile = $File
 
