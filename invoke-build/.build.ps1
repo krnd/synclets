@@ -54,6 +54,22 @@ function __InvokeBuild::*SETUP {
 Set-Alias INVOKEBUILD:SETUP __InvokeBuild::*SETUP
 
 
+# ################################ HELPERS #####################################
+
+foreach ($SearchPath in $script:__InvokeBuild::Paths) {
+    if (Test-Path $SearchPath -PathType Container) {
+        Get-ChildItem $SearchPath -Filter "*.helpers.ps1" | ForEach-Object {
+            $WritePath = if ($SearchPath -eq ".") { "." } `
+                else { Resolve-Path $_.Directory -Relative }
+            Write-Verbose "Helpers $_ ($WritePath)"
+            . $_.FullName
+        }
+    }
+}
+
+INVOKEBUILD:SETUP -ExecuteAll
+
+
 # ################################ PLUGINS #####################################
 
 foreach ($SearchPath in $script:__InvokeBuild::Paths) {
