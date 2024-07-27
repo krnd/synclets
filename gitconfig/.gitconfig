@@ -38,10 +38,10 @@
     s = status --short --branch
     # submodule
     clone-sm = clone --recurse-submodules
-    sm-pull = submodule foreach 'git pull origin master'
     sm-status = submodule foreach 'git status'
-    sms = sm-status
     sm-update = submodule update --recursive --remote
+    sm-pull = submodule foreach 'git pull'
+    sms = sm-status
     smu = sm-update
 
 [core]
