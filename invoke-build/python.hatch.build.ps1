@@ -10,9 +10,7 @@ CONFIGURE python.hatch.output `
 # ################################ TASKS #######################################
 
 TASK python:hatch:build python:venv:activate, {
-    EXEC {
-        hatch build
-    }
+    EXEC { hatch build }
 }
 
 TASK python:hatch:install python:venv:activate, {
@@ -35,10 +33,10 @@ TASK python:hatch:install python:venv:activate, {
 }
 
 TASK python:hatch:uninstall python:venv:activate, {
-    $Package = "$(hatch project metadata name)"
+    $PackageName = (hatch project metadata name)
     EXEC {
         pip uninstall `
-            $Package `
+            $PackageName `
             --yes
     }
 }

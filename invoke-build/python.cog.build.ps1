@@ -62,16 +62,14 @@ TASK python:cog:run python:venv:activate, {
 
     $Sources = @()
     foreach ($Path in (CONF python.cog.paths)) {
-        $Sources += Get-ChildItem `
-            $Path `
-            -File `
-            -Recurse `
-            -Include (CONF python.cog.filter)
+        $Sources += Get-ChildItem $Path -File `
+            -Include (CONF python.cog.filter) `
+            -Recurse
     }
 
     $Sources | ForEach-Object {
         EXEC {
-            cog.exe `
+            cog `
                 --verbosity=$Verbosity `
                 --markers=`"$Markers`" `
                 -I `"$IncludePaths`" `

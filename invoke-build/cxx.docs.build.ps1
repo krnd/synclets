@@ -13,9 +13,7 @@ CONFIGURE cxx.docs.generator `
 # ################################ TASKS #######################################
 
 TASK cxx:docs:build {
-    EXEC {
-        doxygen
-    }
+    EXEC { doxygen }
 }
 
 TASK cxx:docs:show {
