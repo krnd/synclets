@@ -16,12 +16,21 @@ TASK python:hatch:build python:venv:activate, {
 }
 
 TASK python:hatch:install python:venv:activate, {
-    $Wheel = "$(hatch project metadata name)-$(hatch version)-py2.py3-none-any.whl"
+    $PackageName = (hatch project metadata name)
+
+    $WheelName = ($PackageName -replace "[-_.]", "_") `
+        + "-$(hatch version)" `
+        + "-*" `
+        + "-*" `
+        + "-*" `
+        + ".whl"
+
+    $Wheel = (Get-Item (Join-Path (CONF python.hatch.output) $WheelName))
     EXEC {
         pip install `
-        (Join-Path (CONF python.hatch.output) $Wheel) `
-            --no-cache-dir `
-            --force
+            $Wheel.FullName `
+            --force-reinstall `
+            --quiet
     }
 }
 
