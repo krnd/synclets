@@ -10,20 +10,27 @@ CONFIGURE flutter.platform `
 # ################################ TASKS #######################################
 
 TASK flutter:setup {
-    flutter pub get
-    flutter pub upgrade
+    EXEC { flutter pub get }
+    EXEC { flutter pub upgrade }
 }
 
 TASK flutter:build {
     $Platform = (CONF flutter.platform)
-    flutter build -d $Platform --verbose
+    EXEC {
+        flutter build `
+            -d $Platform `
+            --verbose
+    }
 }
 
 TASK flutter:run {
     $Platform = (CONF flutter.platform)
-    flutter run -d $Platform
+    EXEC {
+        flutter run `
+            -d $Platform
+    }
 }
 
 TASK flutter:clean {
-    flutter clean
+    EXEC { flutter clean }
 }
