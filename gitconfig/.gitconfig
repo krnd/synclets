@@ -11,8 +11,9 @@
     # archive
     zip = "!f() { archive_name=$(basename $(git rev-parse --show-toplevel)).zip; git archive --format=zip --output=$archive_name HEAD; }; f"
     # branch
-    br = branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate
-    brdel = branch -D
+    bs = branch --list --all --format='%(HEAD) %(color:magenta)%(refname:short)%(color:reset) %(color:yellow)%(objectname:short)%(color:reset) [%(color:blue)%(upstream:short)%(color:reset)] %(color:dim cyan)%(committerdate:relative)%(color:reset) %(color:green)%(authorname)%(color:reset) %(contents:subject)' --sort=-committerdate
+    new = branch --track
+    del = branch --delete
     # checkout
     co = checkout
     # cherry-pick
