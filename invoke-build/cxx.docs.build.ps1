@@ -21,10 +21,9 @@ TASK cxx:docs:build {
 TASK cxx:docs:show {
     $Generator = (CONF cxx.docs.generator)
     if ($Generator -eq "html") {
-        EXEC {
-            $IndexFile = (Join-Path (CONF cxx.docs.directory) "html/index.html")
-            Start-Process $IndexFile
-        }
+        Start-Process (Join-Path (CONF cxx.docs.directory) "html/index.html")
+    } else {
+        Write-Warning "Unable to show docs for generator '$Generator'."
     }
 }
 
