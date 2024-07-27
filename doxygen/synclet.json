@@ -1,0 +1,15 @@
+{
+  "name": "gitattributes",
+  "version": "1.0.0",
+  "scope": "project",
+  "location": ".",
+  "parameters": {
+    ".gitattributes": {
+      "project.name": "string",
+      "project.version": "string",
+      "project.brief": "string",
+      "project.logo?": "string",
+      "workspace.doxygen?": "string"
+    }
+  }
+}

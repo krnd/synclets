@@ -1,6 +1,7 @@
 {
-  "bucket": "gitattributes",
+  "name": "gitattributes",
   "version": "1.0.0",
+  "scope": "project",
   "location": ".",
   "parameters": {
     ".gitattributes": {

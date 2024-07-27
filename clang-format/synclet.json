@@ -1,6 +1,7 @@
 {
-  "bucket": "clang-format",
+  "name": "clang-format",
   "version": "1.0.0",
+  "scope": "project",
   "location": ".",
   "parameters": {
     ".clang-format": {

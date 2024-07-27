@@ -1,5 +1,6 @@
 {
-  "bucket": "flake8",
+  "name": "flake8",
   "version": "1.0.0",
+  "scope": "project",
   "location": "."
 }

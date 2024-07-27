@@ -1,8 +1,10 @@
 {
-  "bucket": "invoke-build",
+  "name": "invoke-build",
   "version": "1.0.0",
-  "locations": {
+  "scope": "project",
+  "location": {
     "": ".invoke",
-    ".build.ps1": "."
+    ".build.ps1": ".",
+    "invokebuild.bootstrap.bat": "."
   }
 }

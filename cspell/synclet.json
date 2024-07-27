@@ -1,5 +1,6 @@
 {
-  "bucket": "cspell",
+  "name": "cspell",
   "version": "1.0.0",
+  "scope": "project",
   "location": ".config/cspell"
 }

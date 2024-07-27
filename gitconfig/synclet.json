@@ -1,6 +1,7 @@
 {
-  "bucket": "gitconfig",
+  "name": "gitconfig",
   "version": "1.0.0",
+  "scope": "user",
   "location": "<USERPROFILE>",
   "parameters": {
     ".gitconfig": {
