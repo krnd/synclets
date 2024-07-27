@@ -44,6 +44,10 @@ $Paths | ForEach-Object {
         -Filter "*.plugin.ps1" `
         -ErrorAction Continue `
         2> $null
+    Get-ChildItem $_ `
+        -Filter "*.helpers.ps1" `
+        -ErrorAction Continue `
+        2> $null
 } | ForEach-Object {
 
     $RelativePath = $(Resolve-Path -Relative $_.FullName)
