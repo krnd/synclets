@@ -28,7 +28,7 @@ function Out-FileUTF8NoBOM {
         $Text,
         [Parameter()]
         [switch]
-        $Append = $False
+        $Append
     )
     begin {
         $UTF8NoBomEncoding = New-Object System.Text.UTF8Encoding $False

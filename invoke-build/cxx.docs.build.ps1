@@ -25,9 +25,6 @@ TASK cxx:docs:show {
     }
 }
 
-
-# ################################ clean #######################################
-
 TASK cxx:docs:clean {
     REMOVE (CONF cxx.docs.directory)
 }

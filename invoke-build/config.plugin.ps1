@@ -72,42 +72,6 @@ INVOKEBUILD:SETUP {
 
 # ################################ FUNCTIONS ###################################
 
-function __InvokeBuild::Plugin::Config::Load {
-    [CmdletBinding(PositionalBinding = $false)]
-    param (
-        [Parameter(Mandatory, Position = 0)]
-        [string]
-        $Source,
-        [Parameter(Mandatory)]
-        [AllowNull()]
-        [hashtable]
-        $Values,
-        [Parameter(Mandatory)]
-        [AllowEmptyString()]
-        [string]
-        $File
-    )
-    $INVOKE = $script:__InvokeBuild
-    $PLUGIN = $INVOKE::Plugin::Config
-    $STORAGE = $PLUGIN::Storage
-
-    switch ($Source) {
-        "Values" {
-            foreach ($Key in $Values.Keys) {
-                $STORAGE[$Key] = $Values[$Key]
-            }
-            break
-        }
-        "File" {
-            $Json = (Get-Content $File -Raw | ConvertFrom-Json)
-            $Json.PSObject.Properties | ForEach-Object {
-                $STORAGE[$_.Name] = $_.Value
-            }
-            break
-        }
-    }
-}
-
 function __InvokeBuild::Plugin::Config::*LOAD {
     [CmdletBinding(PositionalBinding = $false)]
     param (
@@ -193,3 +157,42 @@ function __InvokeBuild::Plugin::Config::*GET {
 
 Set-Alias CONFIG:GET __InvokeBuild::Plugin::Config::*GET
 Set-Alias CONF __InvokeBuild::Plugin::Config::*GET
+
+
+# ################################ INTERNALS ###################################
+
+function __InvokeBuild::Plugin::Config::Load {
+    [CmdletBinding(PositionalBinding = $false)]
+    param (
+        [Parameter(Mandatory, Position = 0)]
+        [string]
+        $Source,
+        [Parameter(Mandatory)]
+        [AllowNull()]
+        [hashtable]
+        $Values,
+        [Parameter(Mandatory)]
+        [AllowEmptyString()]
+        [string]
+        $File
+    )
+    $INVOKE = $script:__InvokeBuild
+    $PLUGIN = $INVOKE::Plugin::Config
+    $STORAGE = $PLUGIN::Storage
+
+    switch ($Source) {
+        "Values" {
+            foreach ($Key in $Values.Keys) {
+                $STORAGE[$Key] = $Values[$Key]
+            }
+            break
+        }
+        "File" {
+            $Json = (Get-Content $File -Raw | ConvertFrom-Json)
+            $Json.PSObject.Properties | ForEach-Object {
+                $STORAGE[$_.Name] = $_.Value
+            }
+            break
+        }
+    }
+}
