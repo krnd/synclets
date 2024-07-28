@@ -45,6 +45,10 @@ $Paths | ForEach-Object {
         -ErrorAction Continue `
         2> $null
     Get-ChildItem $_ `
+        -Filter "*.extension.ps1" `
+        -ErrorAction Continue `
+        2> $null
+    Get-ChildItem $_ `
         -Filter "*.helpers.ps1" `
         -ErrorAction Continue `
         2> $null

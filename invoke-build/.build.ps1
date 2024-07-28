@@ -98,6 +98,17 @@ foreach ($SearchPath in $script:__InvokeBuild::Paths) {
     }
 }
 
+foreach ($SearchPath in $script:__InvokeBuild::Paths) {
+    if (Test-Path $SearchPath -PathType Container) {
+        Get-ChildItem $SearchPath -Filter "*.extension.ps1" | ForEach-Object {
+            $WritePath = if ($SearchPath -eq ".") { "." } `
+                else { Resolve-Path $_.Directory -Relative }
+            Write-Verbose "Extension $_ ($WritePath)"
+            . $_.FullName
+        }
+    }
+}
+
 INVOKEBUILD:SETUP -ExecuteAll
 
 
