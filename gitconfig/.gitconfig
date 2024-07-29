@@ -22,6 +22,7 @@
     cm = commit -m
     amend = commit --amend --no-edit
     # diff
+    df = diff
     dfc = diff --cached
     # log
     lg = log --format=compactlog --max-count=5
@@ -35,6 +36,7 @@
     discard = !git reset --hard && git clean -d --force
     # status
     s = status --short --branch
+    ss = status --short --branch --untracked-files=no
     # submodule
     clone-sm = clone --recurse-submodules
     sm-status = submodule foreach 'git status'
@@ -53,10 +55,13 @@
 	helper = wincred
 
 [filter "lfs"]
-    clean = git-lfs clean -- %f
     process = git-lfs filter-process
-    required = true
     smudge = git-lfs smudge -- %f
+    clean = git-lfs clean -- %f
+    required = true
+
+[init]
+    defaultBranch = main
 
 [log]
     abbrevCommit = true
@@ -73,10 +78,10 @@
     followTags = true
 
 [status]
-    aheadBehind = true
-    branch = true
-    relativePaths = true
-    renames = copy
     short = true
-    showStash = true
+    branch = true
+    aheadBehind = true
+    relativePaths = true
     showUntrackedFiles = all
+    showStash = true
+    renames = copy
