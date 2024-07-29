@@ -78,7 +78,7 @@
           "foreground": "#666666",
           "foreground_templates": [
             "{{ if .Error }}#B22222{{ end }}",
-            "{{ if .Full }}#E6E6E6{{ end }}"
+            "{{ if .Venv }}#E6E6E6{{ end }}"
           ],
           "leading_diamond": "\ue0ba",
           "trailing_diamond": "\ue0bc",
