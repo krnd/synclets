@@ -64,12 +64,7 @@ function Test-JsonObject {
         $Key
     )
     process {
-        $Object | Get-Member -MemberType NoteProperty | ForEach-Object {
-            if ($_.Name -eq $Key) {
-                return $true
-            }
-        }
-        return $false
+        return ($Object.PSObject.Properties.Name -contains $Key)
     }
 }
 
@@ -81,10 +76,20 @@ function Select-JsonObject {
         $Object,
         [Parameter(Mandatory, Position = 0)]
         [string]
-        $Key
+        $Key,
+        [Parameter()]
+        [switch]
+        $Throw
     )
     process {
-        return ($Object."$Key")
+        if (-not $Throw) {
+            return $Object."$Key"
+        } elseif ($Object.PSObject.Properties.Name -contains $Key) {
+            return $Object."$Key"
+        } else {
+            throw "Key '$Key' not found."
+        }
+
     }
 }
 
