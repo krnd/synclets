@@ -28,8 +28,6 @@ function __InvokeBuild::Plugin::Cache::*STORE {
     $STORAGE = $PLUGIN::Storage
 
     $STORAGE[$Name] = $Value
-
-    return $Value
 }
 
 Set-Alias CACHE:STORE __InvokeBuild::Plugin::Cache::*STORE
