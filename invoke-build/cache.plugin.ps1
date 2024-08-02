@@ -34,7 +34,7 @@ function __InvokeBuild::Plugin::Cache::*STORE {
 
 Set-Alias CACHE:STORE __InvokeBuild::Plugin::Cache::*STORE
 
-function __InvokeBuild::Plugin::Config::*GET {
+function __InvokeBuild::Plugin::Cache::*GET {
     [CmdletBinding(PositionalBinding = $false)]
     param (
         [Parameter(Mandatory, Position = 0)]
@@ -46,7 +46,7 @@ function __InvokeBuild::Plugin::Config::*GET {
         $Default
     )
     $INVOKE = $script:__InvokeBuild
-    $PLUGIN = $INVOKE::Plugin::Config
+    $PLUGIN = $INVOKE::Plugin::Cache
     $STORAGE = $PLUGIN::Storage
 
     if (-not $STORAGE.ContainsKey($Name)) {
@@ -56,5 +56,5 @@ function __InvokeBuild::Plugin::Config::*GET {
     }
 }
 
-Set-Alias CACHE:GET __InvokeBuild::Plugin::Config::*GET
-Set-Alias CACHE __InvokeBuild::Plugin::Config::*GET
+Set-Alias CACHE:GET __InvokeBuild::Plugin::Cache::*GET
+Set-Alias CACHE __InvokeBuild::Plugin::Cache::*GET
