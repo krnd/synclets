@@ -11,6 +11,25 @@ $script:__InvokeBuild::Plugin::Argument = @{
 
 # ################################ FUNCTIONS ###################################
 
+#! [CmdletBinding(PositionalBinding = $false)]
+#! param(
+#!     [Parameter()]
+#!     [ValidateSet('Id', 'Name')]
+#!     [string]
+#!     $Sort
+#! )
+#!
+#! if (-not $Sort) {
+#!     return $VSProfiles
+#! } elseif ($Sort -eq "Id") {
+#!     return $VSProfiles | Sort-Object "Id"
+#! } elseif ($Sort -eq "Name") {
+#!     return $VSProfiles | Sort-Object "Name", "Id"
+#! }
+
+#! add parameter -Optional or allownull for default or add parameter -Required
+#! param required is best choice...
+
 function __InvokeBuild::Plugin::Argument::*GET {
     [CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = "Any")]
     param (
@@ -18,8 +37,15 @@ function __InvokeBuild::Plugin::Argument::*GET {
         [string]
         $Name,
         [Parameter(Position = 1)]
+        [AllowNull()]
         [object]
         $Default,
+        [Parameter(Mandatory, ParameterSetName = "Test")]
+        [switch]
+        $Test,
+        [Parameter(Mandatory, ParameterSetName = "Switch")]
+        [switch]
+        $Switch,
         [Parameter(Mandatory, ParameterSetName = "Boolean")]
         [switch]
         $Boolean,
@@ -29,12 +55,12 @@ function __InvokeBuild::Plugin::Argument::*GET {
         [Parameter(Mandatory, ParameterSetName = "String")]
         [switch]
         $String,
-        [Parameter(Mandatory, ParameterSetName = "Switch")]
+        [Parameter(ParameterSetName = "Any")]
+        [Parameter(ParameterSetName = "Boolean")]
+        [Parameter(ParameterSetName = "Number")]
+        [Parameter(ParameterSetName = "String")]
         [switch]
-        $Switch,
-        [Parameter(Mandatory, ParameterSetName = "<Test>")]
-        [switch]
-        $Test
+        $Required
     )
     $INVOKE = $script:__InvokeBuild
     $PLUGIN = $INVOKE::Plugin::Argument
@@ -45,6 +71,8 @@ function __InvokeBuild::Plugin::Argument::*GET {
             return $false
         } elseif ($Switch) {
             return $false
+        } elseif (-not $Required) {
+            return $Default
         } elseif ($null -ne $Default) {
             return $Default
         }
@@ -58,7 +86,9 @@ function __InvokeBuild::Plugin::Argument::*GET {
     } elseif ($Switch) {
         return ($Index -ge 0)
     } elseif ($Index -lt 0) {
-        if ($null -ne $Default) {
+        if (-not $Required) {
+            return $Default
+        } elseif ($null -ne $Default) {
             return $Default
         }
         throw "[$($PLUGIN::Prefix):GET] " `
@@ -81,7 +111,7 @@ function __InvokeBuild::Plugin::Argument::*GET {
     } elseif ($String) {
         $Value = $RawValue -as [string]
     } else {
-        $Value = $RawValue -as [object]
+        $Value = $RawValue
     }
 
     return $Value
