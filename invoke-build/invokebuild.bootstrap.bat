@@ -54,18 +54,20 @@ $Paths | ForEach-Object {
         2> $null
 } | ForEach-Object {
 
-    $RelativePath = $(Resolve-Path -Relative $_.FullName)
+    $RelativePath = $(Resolve-Path -Relative $_.FullName) `
+        -replace "\\", "/"
     if ($RelativePath.StartsWith(".\")) {
         $RelativePath = $RelativePath.Substring(2)
     }
 
     Write-Host -NoNewline "Unblocking '$RelativePath' ... "
+
     try {
-        Unblock-File "$($_.FullName)"
+        Unblock-File $_.FullName
         Write-Host "OK"
     } catch {
         Write-Host "FAILED"
-        Write-Error "Failed to unblock '$($_.FullName)'."
+        Write-Warning "Failed to unblock '$RelativePath'."
     }
 
 }
