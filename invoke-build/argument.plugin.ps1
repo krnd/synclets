@@ -11,25 +11,6 @@ $script:__InvokeBuild::Plugin::Argument = @{
 
 # ################################ FUNCTIONS ###################################
 
-#! [CmdletBinding(PositionalBinding = $false)]
-#! param(
-#!     [Parameter()]
-#!     [ValidateSet('Id', 'Name')]
-#!     [string]
-#!     $Sort
-#! )
-#!
-#! if (-not $Sort) {
-#!     return $VSProfiles
-#! } elseif ($Sort -eq "Id") {
-#!     return $VSProfiles | Sort-Object "Id"
-#! } elseif ($Sort -eq "Name") {
-#!     return $VSProfiles | Sort-Object "Name", "Id"
-#! }
-
-#! add parameter -Optional or allownull for default or add parameter -Required
-#! param required is best choice...
-
 function __InvokeBuild::Plugin::Argument::*GET {
     [CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = "Any")]
     param (
