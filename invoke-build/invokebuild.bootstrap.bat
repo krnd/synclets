@@ -23,8 +23,8 @@ REM Remove this script file itself.
 REM =============================< PowerShell >=================================
 #Requires -Version 5.1
 
-write-Host "==========[ Invoke-Build Bootstrapper ]=========="
-write-Host
+Write-Host "==========[ Invoke-Build Bootstrapper ]=========="
+Write-Host
 
 $Paths = @(
     ".",
