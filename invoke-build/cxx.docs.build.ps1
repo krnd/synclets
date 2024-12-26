@@ -3,6 +3,8 @@
 
 # ################################ CONFIGURATION ###############################
 
+CONFIGURE cxx.docs.config `
+    -Default ""
 CONFIGURE cxx.docs.directory `
     -Default "docs"
 
@@ -13,7 +15,12 @@ CONFIGURE cxx.docs.generator `
 # ################################ TASKS #######################################
 
 TASK cxx:docs:build {
-    EXEC { doxygen }
+    $ConfigFile = (CONF cxx.docs.config)
+    if ($ConfigFile) {
+        EXEC { doxygen "$ConfigFile" }
+    } else {
+        EXEC { doxygen }
+    }
 }
 
 TASK cxx:docs:show {
