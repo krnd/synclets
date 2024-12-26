@@ -1,5 +1,5 @@
-# clang-format 17.0.1
-# https://releases.llvm.org/17.0.1/tools/clang/docs/ClangFormatStyleOptions.html
+# clang-format 18.1.8
+# https://releases.llvm.org/18.1.8/tools/clang/docs/ClangFormatStyleOptions.html
 
 Language: Cpp
 {{#standard}}
@@ -51,8 +51,10 @@ AlignTrailingComments:
   OverEmptyLines: 1
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
+AllowBreakBeforeNoexceptSpecifier: OnlyWithParen
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: false
+AllowShortCompoundRequirementOnASingleLine: true
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
@@ -86,6 +88,7 @@ BraceWrapping:
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
 BracedInitializerIndentWidth: 4
+BreakAdjacentStringLiterals: true
 BreakAfterAttributes: Always
 # lang:begin(java)
 BreakAfterJavaFieldAnnotations: true
@@ -141,6 +144,7 @@ NamespaceIndentation: All
 ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 4
 ObjCBreakBeforeNestedBlockParam: false
+ObjCPropertyAttributeOrder: []
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: false
 # lang:end(objc)
@@ -151,6 +155,7 @@ PackConstructorInitializers: Never
 # PenaltyBreakComment
 # PenaltyBreakFirstLessLess
 # PenaltyBreakOpenParenthesis
+# PenaltyBreakScopeResolution
 # PenaltyBreakString
 # PenaltyBreakTemplateDeclaration
 # PenaltyExcessCharacter
@@ -176,6 +181,7 @@ RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope
 SeparateDefinitionBlocks: Leave
 ShortNamespaceLines: 0
+SkipMacroDefinitionBody: false
 SortIncludes: CaseInsensitive
 SortJavaStaticImport: After
 SortUsingDeclarations: true
