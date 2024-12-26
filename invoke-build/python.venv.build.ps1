@@ -97,6 +97,8 @@ TASK python:venv:compile python:venv:activate, {
                 $Requirements,
                 $Item.Name)
             $Extension = $null
+        } elseif ($Item.Name -eq $Extension) {
+            $Extension = $null
         }
     }
     if ($null -ne $Extension) {
