@@ -21,6 +21,23 @@ function Create-CodeSigningCertificate {
         -FriendlyName $Name
 }
 
+function Get-CodeSigningCertificate {
+    [CmdletBinding(PositionalBinding = $false)]
+    param (
+        [Parameter(Mandatory, Position = 0)]
+        [string]
+        $Subject,
+        [Parameter()]
+        [switch]
+        $Like
+    )
+    (Get-ChildItem "Cert:/CurrentUser/My" -CodeSigningCert) `
+        | Where-Object {
+            if ($Like) { $_.Subject -like "CN=*$Subject*" }
+            else { $_.Subject -eq "CN=$Subject" }
+        }
+}
+
 function Add-CodeSigningCertificate {
     [CmdletBinding(PositionalBinding = $false)]
     param (
