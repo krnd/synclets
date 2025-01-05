@@ -8,6 +8,9 @@
 {{/urls}}
 
 [alias]
+    # (interface)
+    i = "!f() { lazygit; }; f"
+    ii = "!f() { gitui; }; f"
     # archive
     zip = "!f() { archive_name=$(basename $(git rev-parse --show-toplevel)).zip; git archive --format=zip --output=$archive_name HEAD; }; f"
     # branch
