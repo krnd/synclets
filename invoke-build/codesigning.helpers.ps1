@@ -24,7 +24,7 @@ function Create-CodeSigningCertificate {
 function Add-CodeSigningCertificate {
     [CmdletBinding(PositionalBinding = $false)]
     param (
-        [Parameter(Mandatory, Position = 0)]
+        [Parameter(Mandatory, Position = 0, ValueFromPipeline)]
         [string]
         $File,
         [Parameter(Mandatory)]
@@ -34,24 +34,23 @@ function Add-CodeSigningCertificate {
         [switch]
         $Like
     )
-    $Object = (Get-ChildItem "Cert:/CurrentUser/My" -CodeSigningCert) `
-        | Where-Object {
-            if ($Like) { $_.Subject -like "CN=*$Certificate*" }
-            else { $_.Subject -eq "CN=$Certificate" }
-        }
-    Set-AuthenticodeSignature `
-        -Certificate $Object `
-        -FilePath $File
+    process {
+        Set-AuthenticodeSignature `
+            -Certificate (Get-CodeSigningCertificate $Subject -Like:$Like) `
+            -FilePath $File
+    }
 }
 
 function Remove-CodeSigningCertificate {
     [CmdletBinding(PositionalBinding = $false)]
     param (
-        [Parameter(Mandatory, Position = 0)]
+        [Parameter(Mandatory, Position = 0, ValueFromPipeline)]
         [string]
         $File
     )
-    $Content = (Get-Content $File -Raw)
-    $SigLine = (($Content | Select-String "# SIG").LineNumber - 3)
-    $Content[0..$SigLine] | Set-Content $File
+    process {
+        $Content = (Get-Content $File -Raw)
+        $SigLine = (($Content | Select-String "# SIG").LineNumber - 3)
+        $Content[0..$SigLine] | Set-Content $File
+    }
 }
