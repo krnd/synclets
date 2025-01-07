@@ -5,10 +5,10 @@
 
 CONFIGURE cxx.docs.config `
     -Default ""
-CONFIGURE cxx.docs.directory `
+CONFIGURE cxx.docs.output `
     -Default "docs"
 
-CONFIGURE cxx.docs.generator `
+CONFIGURE cxx.docs.show `
     -Default "html"
 
 
@@ -24,14 +24,22 @@ TASK cxx:docs:build {
 }
 
 TASK cxx:docs:show {
-    $Generator = (CONF cxx.docs.generator)
-    if ($Generator -eq "html") {
-        Start-Process (Join-Path (CONF cxx.docs.directory) "html/index.html")
+    $BasePath = (CONF cxx.docs.output)
+    ($Backend, $ItemPath) = (CONF cxx.docs.show) -split ":"
+
+    if ($Backend -eq "html") {
+        if (-not $ItemPath) {
+            $ItemPath = "html"
+        }
+        $ItemPath = (Join-Path $ItemPath "index.html")
     } else {
-        Write-Warning "Unable to show docs for generator '$Generator'."
+        throw "[cxx:docs] " `
+            + "Invalid backend specifier '$Backend'."
     }
+
+    Start-Process (Join-Path $BasePath $ItemPath)
 }
 
 TASK cxx:docs:clean {
-    REMOVE (CONF cxx.docs.directory)
+    REMOVE (CONF cxx.docs.output)
 }
