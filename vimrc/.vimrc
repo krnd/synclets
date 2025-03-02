@@ -11,6 +11,11 @@ set number
 " comma.
 set ruler
 
+" Ring the bell (beep or screen flash) for error messages.
+set noerrorbells
+" Use visual bell instead of beeping.
+set novisualbell
+
 " In Insert mode: Use the appropriate number of spaces to insert a
 " <Tab>.  Spaces are used in indents with the '>' and '<' commands and
 " when 'autoindent' is on.  To insert a real tab when 'expandtab' is
