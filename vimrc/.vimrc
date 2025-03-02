@@ -32,6 +32,8 @@ set shiftwidth=4
 " Highlight the screen line of the cursor with CursorLine
 " |hl-CursorLine|.
 set cursorline
+highlight clear CursorLine
+highlight CursorLineNR ctermbg=red
 
 " When a bracket is inserted, briefly jump to the matching one.
 set showmatch
