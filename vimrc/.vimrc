@@ -7,6 +7,9 @@ set nowrap
 
 " Print the line number in front of each line.
 set number
+" Show the line and column number of the cursor position, separated by a
+" comma.
+set ruler
 
 " In Insert mode: Use the appropriate number of spaces to insert a
 " <Tab>.  Spaces are used in indents with the '>' and '<' commands and
