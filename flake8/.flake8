@@ -127,6 +127,8 @@ ignore =
     # - [E704] multiple statements on one line (def)
     #   (conflicts with black)
     E701, E704,
+    # - [E731] do not assign a lambda expression, use a def
+    E731,
     # - [W503] line break before binary operator
     #   (conflicts with black)
     # - [W505] doc line too long
