@@ -54,8 +54,9 @@ TASK python:venv:deactivate {
 }
 
 TASK python:venv:setup `
+    python:venv:deactivate, `
     python:venv:create, `
-    python:venv:compile, `
+    python:venv:activate, `
     python:venv:install
 
 TASK python:venv:create python:venv:deactivate, {
