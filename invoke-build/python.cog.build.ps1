@@ -1,3 +1,4 @@
+# python.cog.build.ps1 1.0
 #Requires -Version 5.1
 
 
