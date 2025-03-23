@@ -18,7 +18,7 @@ CONFIGURE python.schema.basepath `
 
 # ################################ TASKS #######################################
 
-TASK python:ieb:schema python:venv:activate, {
+TASK python:schema:build python:venv:activate, {
     $Models = (CONF python.schema.models)
     $BasePath = (CONF python.schema.basepath)
 
