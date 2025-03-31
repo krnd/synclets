@@ -7,7 +7,7 @@
 # ###################### Path ##############################
 
 function Join-Paths {
-    [CmdletBinding(PositionalBinding = $False)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory, Position = 0, ValueFromRemainingArguments)]
         [string[]]
@@ -24,7 +24,7 @@ function Join-Paths {
 # ###################### File ##############################
 
 function Out-FileUTF8NoBOM {
-    [CmdletBinding(PositionalBinding = $False)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory, Position = 0)]
         [string[]]
@@ -37,7 +37,7 @@ function Out-FileUTF8NoBOM {
         $Append
     )
     begin {
-        $UTF8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+        $UTF8NoBomEncoding = New-Object System.Text.UTF8Encoding $false
         if (-not $Append) {
             [System.IO.File]::WriteAllText(
                 $FilePath, [System.String]::Empty,
@@ -55,7 +55,7 @@ function Out-FileUTF8NoBOM {
 # ###################### JSON ##############################
 
 function Test-JsonObject {
-    [CmdletBinding(PositionalBinding = $False)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
         [object]
@@ -70,7 +70,7 @@ function Test-JsonObject {
 }
 
 function Select-JsonObject {
-    [CmdletBinding(PositionalBinding = $False)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
         [object]
@@ -95,7 +95,7 @@ function Select-JsonObject {
 }
 
 function Set-JsonObject {
-    [CmdletBinding(PositionalBinding = $False)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
         [object]
@@ -113,7 +113,7 @@ function Set-JsonObject {
 }
 
 function Expand-JsonObject {
-    [CmdletBinding(PositionalBinding = $False, DefaultParameterSetName = "Items")]
+    [CmdletBinding(PositionalBinding = $false, DefaultParameterSetName = "Items")]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
         [object]
