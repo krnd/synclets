@@ -34,9 +34,7 @@
     lg = log --format=compactlog --max-count=5
     last = log -1 HEAD --stat
     # pull
-    #
-    # push
-    #
+    pr = pull --rebase
     # reset
     undo = reset --mixed HEAD~1
     discard = !git reset --hard && git clean -d --force
