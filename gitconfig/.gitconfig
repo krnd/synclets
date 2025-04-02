@@ -49,8 +49,7 @@
     sms = sm-status
     smu = sm-update
     # compound aliases
-    sync = !git pull && git push
-    ppx = !git reset --hard && git pull && git push
+    sync = !git pull --rebase && git push
 
 [core]
     autocrlf = true
