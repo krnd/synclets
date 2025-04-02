@@ -10,6 +10,8 @@
 [alias]
     # (interface)
     ii = "!f() { lazygit; }; f"
+    # add
+    aa = add --patch
     # archive
     zip = "!f() { archive_name=$(basename $(git rev-parse --show-toplevel)).zip; git archive --format=zip --output=$archive_name HEAD; }; f"
     # branch
