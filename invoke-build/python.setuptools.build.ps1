@@ -1,15 +1,10 @@
-# python.setuptools.build.ps1 1.0
+# python.setuptools.build.ps1 1.1
 #Requires -Version 5.1
-
-
-# ################################ VARIABLES ###################################
-
-$script:__InvokeBuild::Builder["python.setuptools"] = @{}
 
 
 # ################################ CONFIGURATION ###############################
 
-CONFIGURE python.setuptools.dist `
+CONFIGURE python.setuptools.output `
     -Default "dist"
 
 
@@ -21,7 +16,7 @@ TASK python:setuptools:build python:venv:activate, {
         EXEC {
             python -m build `
                 $_.DirectoryName `
-                --outdir (CONF python.setuptools.dist) `
+                --outdir (CONF python.setuptools.output) `
                 --wheel
         }
         Remove-Item (Join-Path $_.Directory "build") `
