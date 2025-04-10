@@ -1,10 +1,5 @@
-# python.schema.build.ps1 1.0
+# python.schema.build.ps1 1.1
 #Requires -Version 5.1
-
-
-# ################################ VARIABLES ###################################
-
-$script:__InvokeBuild::Builder["python.schema"] = @{}
 
 
 # ################################ CONFIGURATION ###############################
