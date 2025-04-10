@@ -140,9 +140,6 @@ ignore =
     # - [B010] Do not call `setattr(x, 'attr')`, instead use normal property
     #   access: `x.attr = val`.
     B902,
-    # - [B907]  Consider replacing `f"'{foo}'"` with `f"{foo!r}"` which is both
-    #   easier to read and will escape quotes inside foo if that would appear.
-    # B907,
     # - [B950] Line too long.
     #   (impossible by black)
     B950,
