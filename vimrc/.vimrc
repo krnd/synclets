@@ -1,4 +1,23 @@
+" https://vimdoc.sourceforge.net/htmldoc/syntax.html
 " http://vimdoc.sourceforge.net/htmldoc/options.html
+
+if has("gui_running")
+
+  " Load color scheme {name}.
+  colorscheme slate
+
+  " https://github.com/tonsky/FiraCode/issues/462
+  set guifont=Fira_Code:h11
+
+  " This option only has an effect in the GUI version of Vim.
+  " Menu bar is present.
+  set guioptions -=m
+  " Include Toolbar.
+  set guioptions -=T
+  " Right-hand scrollbar is always present.
+  set guioptions -=r
+
+endif
 
 " When on, lines longer than the width of the window will wrap and
 " displaying continues on the next line.  When off lines will not wrap
@@ -32,6 +51,8 @@ set shiftwidth=4
 " Highlight the screen line of the cursor with CursorLine
 " |hl-CursorLine|.
 set cursorline
+" the screen line that the cursor is in when 'cursorline' is
+" set
 highlight clear CursorLine
 highlight CursorLineNR ctermbg=red
 
@@ -40,3 +61,7 @@ set showmatch
 
 " When there is a previous search pattern, highlight all its matches.
 set hlsearch
+
+" Influences the working of <BS>, <Del>, CTRL-W and CTRL-U in Insert
+" mode.
+set backspace=indent,eol,start
