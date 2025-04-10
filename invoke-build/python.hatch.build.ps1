@@ -1,4 +1,4 @@
-# python.hatch.build.ps1 1.0
+# python.hatch.build.ps1 1.1
 #Requires -Version 5.1
 
 
@@ -25,6 +25,7 @@ TASK python:hatch:install python:venv:activate, {
         + ".whl"
 
     $Wheel = (Get-Item (Join-Path (CONF python.hatch.output) $WheelName))
+
     EXEC {
         pip install `
             $Wheel.FullName `
@@ -40,15 +41,4 @@ TASK python:hatch:uninstall python:venv:activate, {
             $PackageName `
             --yes
     }
-}
-
-TASK python:hatch:clean python:venv:activate, {
-    EXEC {
-        hatch clean `
-            --taget sdist
-    }
-}
-
-TASK python:hatch:purge python:venv:activate, {
-    EXEC { hatch clean }
 }
