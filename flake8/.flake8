@@ -85,7 +85,7 @@ builtins =
 disable-noqa = False
 
 # Set the maximum length that any line (with some exceptions) may be.
-max-line-length = 79
+max-line-length = 80
 
 # Set the maximum allowed McCabe complexity value for a block of code.
 max-complexity = 10
@@ -131,8 +131,7 @@ ignore =
     E731,
     # - [W503] line break before binary operator
     #   (conflicts with black)
-    # - [W505] doc line too long
-    W503, W505,
+    W503,
     # - [B902] Invalid first argument used for method.
     #   (conflicts with pylance:reportSelfClsParameterName)
     B009, B010,
@@ -145,7 +144,8 @@ ignore =
     #   easier to read and will escape quotes inside foo if that would appear.
     # B907,
     # - [B950] Line too long.
-    # B950,
+    #   (impossible by black)
+    B950,
 
 # Specify a list of codes to add to the list of ignored ones.
 # extend-ignore =
@@ -171,4 +171,4 @@ per-file-ignores =
 doctests = True
 
 # Set the maximum length that a comment or docstring line may be.
-max-doc-length = 79
+max-doc-length = 100
