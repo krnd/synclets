@@ -1,4 +1,4 @@
-# config.plugin.ps1 1.1
+# config.plugin.ps1 1.2
 #Requires -Version 5.1
 
 
@@ -129,6 +129,22 @@ function __InvokeBuild::Plugin::Config::*VALUE {
 
 Set-Alias CONFIG:VALUE __InvokeBuild::Plugin::Config::*VALUE
 Set-Alias CONFIGURE __InvokeBuild::Plugin::Config::*VALUE
+
+function __InvokeBuild::Plugin::Config::*HAS {
+    [CmdletBinding(PositionalBinding = $false)]
+    param (
+        [Parameter(Mandatory, Position = 0)]
+        [string]
+        $Name
+    )
+    $INVOKE = $script:__InvokeBuild
+    $PLUGIN = $INVOKE::Plugin::Config
+    $STORAGE = $PLUGIN::Storage
+
+    return (-not $STORAGE.ContainsKey($Name))
+}
+
+Set-Alias CONFIG:HAS __InvokeBuild::Plugin::Config::*HAS
 
 function __InvokeBuild::Plugin::Config::*SET {
     [CmdletBinding(PositionalBinding = $false)]
