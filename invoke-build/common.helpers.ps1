@@ -1,4 +1,4 @@
-# common.helpers.ps1 1.0
+# common.helpers.ps1 1.1
 #Requires -Version 5.1
 
 
@@ -27,11 +27,14 @@ function Out-FileUTF8NoBOM {
     [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory, Position = 0)]
-        [string[]]
+        [string]
         $FilePath,
         [Parameter(Mandatory, Position = 1, ValueFromPipeline)]
         [string[]]
         $Text,
+        [Parameter()]
+        [switch]
+        $AsLines,
         [Parameter()]
         [switch]
         $Append
@@ -45,9 +48,18 @@ function Out-FileUTF8NoBOM {
         }
     }
     process {
-        [System.IO.File]::AppendAllLines(
-            $FilePath, $Text,
-            $UTF8NoBomEncoding)
+        if (-not $AsLines -and ($Text.Length -eq 1)) {
+            # If there is only a single string provided, we assume it contains
+            # the complete file - including newlines. To prevent multiple
+            # trailing newlines we append as text instead of as line.
+            [System.IO.File]::AppendAllText(
+                $FilePath, $Text[0],
+                $UTF8NoBomEncoding)
+        } else {
+            [System.IO.File]::AppendAllLines(
+                $FilePath, $Text,
+                $UTF8NoBomEncoding)
+        }
     }
 }
 
