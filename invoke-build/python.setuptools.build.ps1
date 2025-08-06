@@ -1,4 +1,4 @@
-# python.setuptools.build.ps1 1.1
+# python.setuptools.build.ps1 1.2
 #Requires -Version 5.1
 
 
@@ -11,7 +11,7 @@ CONFIGURE python.setuptools.output `
 # ################################ TASKS #######################################
 
 TASK python:setuptools:build python:venv:activate, {
-    Get-ChildItem "*/setup.py" `
+    Get-ChildItem @("setup.py", "*/setup.py") `
     | ForEach-Object {
         EXEC {
             python -m build `
@@ -26,7 +26,7 @@ TASK python:setuptools:build python:venv:activate, {
 }
 
 TASK python:setuptools:install python:venv:activate, {
-    Get-ChildItem "*/setup.py" `
+    Get-ChildItem @("setup.py", "*/setup.py") `
     | ForEach-Object {
         EXEC {
             pip install `
@@ -37,7 +37,7 @@ TASK python:setuptools:install python:venv:activate, {
 }
 
 TASK python:setuptools:clean {
-    Get-ChildItem "*/setup.py" `
+    Get-ChildItem @("setup.py", "*/setup.py") `
     | ForEach-Object {
         Remove-Item (Join-Path $_.Directory "build") `
             -ErrorAction SilentlyContinue `
