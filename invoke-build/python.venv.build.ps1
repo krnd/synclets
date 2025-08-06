@@ -1,4 +1,4 @@
-# python.venv.build.ps1 1.0
+# python.venv.build.ps1 1.1
 #Requires -Version 5.1
 
 
@@ -118,6 +118,7 @@ TASK python:venv:compile python:venv:activate, {
             pip-compile $File.FullName `
                 --output-file $Lockfile `
                 --strip-extras `
+                --upgrade `
                 --no-header `
                 --no-annotate `
                 --quiet
