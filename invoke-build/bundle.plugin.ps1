@@ -1,4 +1,4 @@
-# bundle.plugin.ps1 1.0
+# bundle.plugin.ps1 1.1
 #Requires -Version 5.1
 
 
@@ -15,10 +15,12 @@ $script:__InvokeBuild::Plugin::Bundle = @{
 
 # ################################ CONFIGURATION ###############################
 
-CONFIGURE bundle.workdir `
-    -Default "bundle"
-CONFIGURE bundle.outputdir `
-    -Default "dist"
+INVOKEBUILD:SETUP {
+    CONFIGURE bundle.workdir `
+        -Default "bundle"
+    CONFIGURE bundle.outputdir `
+        -Default "dist"
+}
 
 
 # ################################ FUNCTIONS ###################################
