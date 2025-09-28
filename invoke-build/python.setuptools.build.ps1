@@ -1,4 +1,4 @@
-# python.setuptools.build.ps1 1.3
+# python.setuptools.build.ps1 1.4
 #Requires -Version 5.1
 
 
@@ -38,6 +38,17 @@ TASK python:setuptools:install python:venv:activate, {
             pip install `
                 --editable $_.Directory `
                 --force
+        }
+    }
+}
+
+TASK python:setuptools:uninstall python:venv:activate, {
+    Get-ChildItem @("setup.py", "*/setup.py") `
+    | ForEach-Object {
+        EXEC {
+            pip uninstall `
+                $(python $_ --name) `
+                --yes
         }
     }
 }
