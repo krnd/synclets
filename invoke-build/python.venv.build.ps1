@@ -28,7 +28,7 @@ CONFIGURE python.venv.compilants `
     -Default @()
 
 
-# ################################ SHORTHANDS ##################################
+# ################################ SETUP #######################################
 
 INVOKEBUILD:SETUP {
     if (CONF python.venv.shorthands) {
