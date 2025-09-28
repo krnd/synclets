@@ -1,4 +1,4 @@
-# python.setuptools.build.ps1 1.2
+# python.setuptools.build.ps1 1.3
 #Requires -Version 5.1
 
 
@@ -6,18 +6,24 @@
 
 CONFIGURE python.setuptools.output `
     -Default "dist"
+CONFIGURE python.setuptools.sdist `
+    -Default $true
+CONFIGURE python.setuptools.wheel `
+    -Default $true
 
 
 # ################################ TASKS #######################################
 
 TASK python:setuptools:build python:venv:activate, {
+    $wheel = if (CONF python.setuptools.sdist) { "--sdist" } else { "" }
+    $sdist = if (CONF python.setuptools.wheel) { "--wheel" } else { "" }
     Get-ChildItem @("setup.py", "*/setup.py") `
     | ForEach-Object {
         EXEC {
             python -m build `
                 $_.DirectoryName `
                 --outdir (CONF python.setuptools.output) `
-                --wheel
+                $sdist $wheel
         }
         Remove-Item (Join-Path $_.Directory "build") `
             -ErrorAction SilentlyContinue `
