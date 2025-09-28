@@ -1,4 +1,4 @@
-@REM invokebuild.update.bat 1.0
+@REM invokebuild.update.bat 2.0
 @ECHO OFF
 
 REM Write the PowerShell script.
@@ -38,10 +38,14 @@ $Paths = @(
     "invoke-build"
 )
 
-$UrlTemplate = if ($null -ne $env:INVOKE_BUILD_UPDATER_URL_TEMPLATE) {
-    $env:INVOKE_BUILD_UPDATER_URL_TEMPLATE
+$Default = "https://raw.githubusercontent.com/krnd/synclets/main/invoke-build/{}"
+$Providers = if ($null -ne $env:INVOKE_BUILD_UPDATER_PROVIDERS) {
+    ($env:INVOKE_BUILD_UPDATER_PROVIDERS -split ";")
 } else {
-    "https://raw.githubusercontent.com/krnd/synclets/main/invoke-build/{}"
+    @($Default)
+}
+$Providers = ($Providers -replace "...", $Default) | ForEach-Object {
+    [Environment]::ExpandEnvironmentVariables($_)
 }
 
 $Paths | ForEach-Object {
@@ -75,9 +79,30 @@ $Paths | ForEach-Object {
     try {
 
         $UpdateStep = "download"
-        Invoke-WebRequest `
-            -Uri ($UrlTemplate -replace "{}", $_.Name) `
-            -OutFile $_.FullName
+        $ThrowException = $null
+        foreach ($Item in $Providers) {
+            if ($null -eq $Item) {
+                continue
+            }
+            try {
+                if ($Item.Contains("://")) {
+                    Invoke-WebRequest `
+                        -Uri ($Item -replace "{}", $_.Name) `
+                        -OutFile $_.FullName
+                } else {
+                    Copy-Path `
+                        -Path ($Item -replace "{}", $_.Name) `
+                        -Destination $_.FullName
+                }
+            } catch {
+                if ($null -eq $ThrowException) {
+                    $ThrowException = $_.Exception
+                }
+            }
+        }
+        if ($null -ne $ThrowException) {
+            throw $ThrowException
+        }
 
         $UpdateStep = "unblock"
         Unblock-File $_.FullName
