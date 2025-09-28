@@ -1,4 +1,4 @@
-# python.venv.build.ps1 1.1
+# python.venv.build.ps1 1.2
 #Requires -Version 5.1
 
 
@@ -89,7 +89,7 @@ TASK python:venv:compile python:venv:activate, {
     $INVOKE = $script:__InvokeBuild
     $BUILDER = $INVOKE::Builder["python.venv"]
 
-    $Compilants = (CONF python.venv.compilants)
+    $Compilants = @(CONF python.venv.compilants)
 
     $Requirements = (CONF python.venv.requirements)
     $Extension = [IO.Path]::GetExtension($Requirements)
