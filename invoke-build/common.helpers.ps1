@@ -1,4 +1,4 @@
-# common.helpers.ps1 1.1
+# common.helpers.ps1 1.2
 #Requires -Version 5.1
 
 
@@ -40,6 +40,7 @@ function Out-FileUTF8NoBOM {
         $Append
     )
     begin {
+        $FilePath = [System.IO.Path]::Combine((Get-Location), $FilePath)
         $UTF8NoBomEncoding = New-Object System.Text.UTF8Encoding $false
         if (-not $Append) {
             [System.IO.File]::WriteAllText(
