@@ -1,4 +1,4 @@
-# python.schema.build.ps1 1.1
+# python.schema.build.ps1 2.0
 #Requires -Version 5.1
 
 
@@ -27,12 +27,18 @@ TASK python:schema:build python:venv:activate, {
 
         EXEC {
             datamodel-codegen `
-                --use-schema-description `
-                --use-field-description `
                 --input $SchemaFile `
                 --input-file-type jsonschema `
                 --output $ModelFile `
-                --output-model-type typing.TypedDict
-        }
+                --output-model-type typing.TypedDict `
+                --disable-future-imports `
+                --enum-field-as-literal all `
+                --special-field-name-prefix "_" `
+                --use-field-description `
+                --use-schema-description `
+                --use-title-as-name `
+                --use-union-operator `
+                --disable-timestamp
+            }
     }
 }
