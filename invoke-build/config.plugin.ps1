@@ -1,4 +1,4 @@
-# config.plugin.ps1 1.3
+# config.plugin.ps1 1.4
 #Requires -Version 5.1
 
 
@@ -141,7 +141,8 @@ function __InvokeBuild::Plugin::Config::*HAS {
     $PLUGIN = $INVOKE::Plugin::Config
     $STORAGE = $PLUGIN::Storage
 
-    return $STORAGE.ContainsKey($Name)
+    return $STORAGE.ContainsKey($Name) `
+        -and ($null -ne $STORAGE[$Name])
 }
 
 Set-Alias CONFIG:HAS __InvokeBuild::Plugin::Config::*HAS
