@@ -1,4 +1,4 @@
-# python.venv.build.ps1 1.2
+# python.venv.build.ps1 2.0
 #Requires -Version 5.1
 
 
@@ -24,8 +24,6 @@ CONFIGURE python.venv.path `
 
 CONFIGURE python.venv.requirements `
     -Default "requirements.txt"
-CONFIGURE python.venv.compilants `
-    -Default @()
 
 
 # ################################ SETUP #######################################
@@ -77,53 +75,6 @@ TASK python:venv:create python:venv:deactivate, {
             --upgrade `
             --quiet
     }
-    EXEC {
-        python `
-            -m pip install pip-tools `
-            --upgrade `
-            --quiet
-    }
-}
-
-TASK python:venv:compile python:venv:activate, {
-    $INVOKE = $script:__InvokeBuild
-    $BUILDER = $INVOKE::Builder["python.venv"]
-
-    $Compilants = @(CONF python.venv.compilants)
-
-    $Requirements = (CONF python.venv.requirements)
-    $Extension = [IO.Path]::GetExtension($Requirements)
-    foreach ($Item in $BUILDER.LockfileExtension.GetEnumerator()) {
-        if ($Item.Value -eq $Extension) {
-            $Requirements = [IO.Path]::ChangeExtension(
-                $Requirements,
-                $Item.Name)
-            $Extension = $null
-        } elseif ($Item.Name -eq $Extension) {
-            $Extension = $null
-        }
-    }
-    if ($null -ne $Extension) {
-        # Unable to revert extension of requirements file.
-    } elseif (Test-Path $Requirements -PathType Leaf) {
-        $Compilants += $Requirements
-    }
-
-    $Compilants | ForEach-Object {
-        $File = (Get-Item $_)
-        $Lockfile = [IO.Path]::ChangeExtension(
-            $File.FullName,
-            $BUILDER.LockfileExtension[$File.Extension])
-        EXEC {
-            pip-compile $File.FullName `
-                --output-file $Lockfile `
-                --strip-extras `
-                --upgrade `
-                --no-header `
-                --no-annotate `
-                --quiet
-        }
-    }
 }
 
 TASK python:venv:install python:venv:activate, {
@@ -141,13 +92,6 @@ TASK python:venv:reinstall python:venv:activate, {
     EXEC {
         python `
             -m pip install pip `
-            --force-reinstall `
-            --upgrade `
-            --quiet
-    }
-    EXEC {
-        python `
-            -m pip install pip-tools `
             --force-reinstall `
             --upgrade `
             --quiet
