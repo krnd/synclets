@@ -1,4 +1,4 @@
-# common.helpers.ps1 1.2
+# common.helpers.ps1 1.3
 #Requires -Version 5.1
 
 
@@ -14,7 +14,7 @@ function Join-Paths {
         $Paths
     )
     $Result = $Paths[0]
-    foreach ($Item in $Paths[1..$Paths.Count]) {
+    foreach ($Item in $Paths[1..($Paths.Count-1)]) {
         $Result = (Join-Path $Result $Item)
     }
     return $Result
