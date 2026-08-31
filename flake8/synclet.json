@@ -1,6 +1,6 @@
 {
-  "name": "flake8",
-  "version": "1.0.0",
-  "scope": "project",
-  "location": "."
+    "name": "flake8",
+    "version": "1.0.0",
+    "scope": "project",
+    "location": "."
 }

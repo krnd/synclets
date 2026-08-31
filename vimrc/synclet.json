@@ -1,6 +1,6 @@
 {
-  "name": "vimrc",
-  "version": "1.0.0",
-  "scope": "user",
-  "location": "<USERPROFILE>"
+    "name": "vimrc",
+    "version": "1.0.0",
+    "scope": "user",
+    "location": "<USERPROFILE>"
 }

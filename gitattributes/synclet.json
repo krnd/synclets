@@ -1,11 +1,11 @@
 {
-  "name": "gitattributes",
-  "version": "1.0.0",
-  "scope": "project",
-  "location": ".",
-  "parameters": {
-    ".gitattributes": {
-      "lfs?": "bool"
+    "name": "gitattributes",
+    "version": "1.0.0",
+    "scope": "project",
+    "location": ".",
+    "parameters": {
+        ".gitattributes": {
+            "lfs?": "bool"
+        }
     }
-  }
 }

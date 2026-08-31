@@ -1,11 +1,11 @@
 {
-  "name": "clang-format",
-  "version": "1.0.0",
-  "scope": "project",
-  "location": ".",
-  "parameters": {
-    ".clang-format": {
-      "standard?": "string"
+    "name": "clang-format",
+    "version": "1.0.0",
+    "scope": "project",
+    "location": ".",
+    "parameters": {
+        ".clang-format": {
+            "standard?": "string"
+        }
     }
-  }
 }

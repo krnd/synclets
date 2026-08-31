@@ -1,6 +1,6 @@
 {
-  "name": "powershell-profile",
-  "version": "1.0.0",
-  "scope": "user",
-  "location": "<USERPROFILE>/Documents/WindowsPowerShell"
+    "name": "powershell-profile",
+    "version": "1.0.0",
+    "scope": "user",
+    "location": "<USERPROFILE>/Documents/WindowsPowerShell"
 }

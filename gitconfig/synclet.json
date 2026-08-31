@@ -1,16 +1,16 @@
 {
-  "name": "gitconfig",
-  "version": "1.0.0",
-  "scope": "user",
-  "location": "<USERPROFILE>",
-  "parameters": {
-    ".gitconfig": {
-      "user.name": "string",
-      "user.email": "string",
-      "urls[]?": {
-        "path": "string",
-        "name": "string"
-      }
+    "name": "gitconfig",
+    "version": "1.0.0",
+    "scope": "user",
+    "location": "<USERPROFILE>",
+    "parameters": {
+        ".gitconfig": {
+            "user.name": "string",
+            "user.email": "string",
+            "urls[]?": {
+                "path": "string",
+                "name": "string"
+            }
+        }
     }
-  }
 }

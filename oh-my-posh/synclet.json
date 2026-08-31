@@ -1,6 +1,6 @@
 {
-  "name": "oh-my-posh",
-  "version": "1.0.0",
-  "scope": "user",
-  "location": "<USERPROFILE>/.config"
+    "name": "oh-my-posh",
+    "version": "1.0.0",
+    "scope": "user",
+    "location": "<USERPROFILE>/.config"
 }
