@@ -1,47 +1,67 @@
-################################## Preface #####################################
+# ################################ PREFACE #####################################
 
-$script:ISWORKWISE = ("IEB-BR" -eq $env:USERDOMAIN)
+$global:ISWORKWISE = $null
 
+. (Join-Path $PSScriptRoot "profile.local.ps1")
 
-################################## Settings ####################################
-
-######################## Oh My Posh ########################
-#   https://ohmyposh.dev
-
-# Apply custom prompt theme.
-oh-my-posh init pwsh --config (Resolve-Path -Path (Join-Path $env:USERPROFILE (Join-Path ".config" "oh-my-posh.json"))).Path | Invoke-Expression
-
-# Enable transient prompt feature.
-Enable-PoshTransientPrompt
+if ($null -eq $global:ISWORKWISE) {
+    throw "Local profile does not set 'ISWORKWISE'."
+}
 
 
-######################## pipenv ############################
-#   https://pipenv.pypa.io
+# ################################ SETTINGS ####################################
+
+# ###################### Oh My Posh ########################
+# https://ohmyposh.dev
+
+Invoke-Expression (& {
+        $Theme = (Join-Path `
+            (Join-Path $env:USERPROFILE ".config") `
+            (Join-Path "oh-my-posh" "theme.json"))
+        (oh-my-posh init pwsh --config $Theme | Out-String)
+    })
+
+
+# ###################### pipenv ############################
+# https://pipenv.pypa.io
 
 # If set, use `.venv` in your project directory instead of the global virtualenv
 # manager `pew`.
 $env:PIPENV_VENV_IN_PROJECT = 1
 
 
-######################### PSReadLine #######################
+# ###################### PSReadLine ########################
+# https://learn.microsoft.com/powershell/module/psreadline
+
 #Requires -Modules PSReadLine
-#   https://learn.microsoft.com/en-us/powershell/module/psreadline
 
-# No error and anbiguous conditions feedback.
+# Specifies how PSReadLine responds to various error and ambiguous conditions.
 Set-PSReadLineOption -BellStyle None
-# Command line editing mode emulate Bash or Emacs.
-Set-PSReadLineOption -EditMode Emacs
+# Specifies the command line editing mode.
+Set-PSReadLineOption -EditMode Windows
+# Specifies the maximum number of commands to save in PSReadLine history.
+Set-PSReadLineOption -MaximumHistoryCount 16384
+# This option controls the recall behavior.
+Set-PSReadLineOption -HistoryNoDuplicates
+# Indicates that the cursor moves to the end of commands that you load from
+# history by using a search.
+Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+
+# Specifies the source for PSReadLine to get predictive suggestions.
+Set-PSReadLineOption -PredictionSource History
+# Sets the style for the display of the predictive text.
+Set-PSReadLineOption -PredictionViewStyle ListView
 
 
-######################## Terminal-Icons ####################
+# ###################### Terminal-Icons ####################
+# https://github.com/devblackops/Terminal-Icons
+
 #Requires -Modules Terminal-Icons
-#   https://github.com/devblackops/Terminal-Icons
-
-Import-Module -Name Terminal-Icons
+# Import-Module -Name Terminal-Icons
 
 
-######################## virtualenv ########################
-#   https://virtualenv.pypa.io
+# ###################### virtualenv ########################
+# https://virtualenv.pypa.io
 
 # Activator scripts also modify your shell prompt to indicate which environment
 # is currently active, by prepending the environment name (or the name specified
@@ -53,31 +73,48 @@ Import-Module -Name Terminal-Icons
 $env:VIRTUAL_ENV_DISABLE_PROMPT = 1
 
 
-######################## zoxide ############################
-#   https://github.com/ajeetdsouza/zoxide
+# ###################### zoxide ############################
+# https://github.com/ajeetdsouza/zoxide
 
 Invoke-Expression (& {
-    $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
-    (zoxide init --hook $hook powershell | Out-String)
-})
+        (zoxide init powershell | Out-String)
+    })
 
 
-################################## Aliases #####################################
+# ################################ ALIASES #####################################
 
-######################## InvokeBuild #######################
+# ###################### InvokeBuild #######################
+# https://github.com/nightroman/Invoke-Build
+
 #Requires -Modules InvokeBuild
-#   https://github.com/nightroman/Invoke-Build
 
 New-Alias -Name ib -Value Invoke-Build
 
 
-################################## Shortcuts ###################################
+# ################################ KEYBINDINGS #################################
 
-# Set-PSReadlineKeyHandler -Chord <key> -ScriptBlock {
-#   <script-block>
-# }
+Set-PSReadLineKeyHandler -Chord "UpArrow" -Function HistorySearchBackward
+Set-PSReadLineKeyHandler -Chord "DownArrow" -Function HistorySearchForward
 
 
-################################## Variables ###################################
+# ################################ FUNCTIONS ###################################
 
-# ...
+# ###################### Claude ############################
+# https://claude.ai
+
+function Set-ClaudeProfile {
+    [CmdletBinding(PositionalBinding = $false)]
+    param (
+        [Parameter(Mandatory, Position = 0)]
+        [string]
+        $Name
+    )
+    $Path = (Join-Path $HOME ".claude-$Name")
+    if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
+        throw "Claude profile '$Name' does not exist."
+    }
+    # Switch the profile for every session started from now on.
+    [Environment]::SetEnvironmentVariable("CLAUDE_CONFIG_DIR", $Path, "User")
+    # Switch the profile for the current session.
+    $env:CLAUDE_CONFIG_DIR = $Path
+}
