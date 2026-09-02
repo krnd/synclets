@@ -4,8 +4,6 @@
     "scope": "project",
     "location": ".",
     "parameters": {
-        ".gitattributes": {
-            "lfs?": "bool"
-        }
+        "lfs": "bool"
     }
 }

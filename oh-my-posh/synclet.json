@@ -2,5 +2,5 @@
     "name": "oh-my-posh",
     "version": "1.0.0",
     "scope": "user",
-    "location": "<USERPROFILE>/.config"
+    "location": "%USERPROFILE%/.config/oh-my-posh"
 }
