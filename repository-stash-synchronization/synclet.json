@@ -1,0 +1,6 @@
+{
+    "name": "repository-stash-synchronization",
+    "version": "1.0.0",
+    "scope": "project",
+    "location": ".stash"
+}
