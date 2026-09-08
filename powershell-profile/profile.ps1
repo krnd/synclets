@@ -50,7 +50,7 @@ Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 # Specifies the source for PSReadLine to get predictive suggestions.
 Set-PSReadLineOption -PredictionSource History
 # Sets the style for the display of the predictive text.
-Set-PSReadLineOption -PredictionViewStyle ListView
+Set-PSReadLineOption -PredictionViewStyle InlineView
 
 
 # ###################### Terminal-Icons ####################
@@ -92,6 +92,8 @@ New-Alias -Name ib -Value Invoke-Build
 
 
 # ################################ KEYBINDINGS #################################
+
+Set-PSReadLineKeyHandler -Chord "Ctrl+Spacebar" -Function SwitchPredictionView
 
 Set-PSReadLineKeyHandler -Chord "UpArrow" -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Chord "DownArrow" -Function HistorySearchForward
